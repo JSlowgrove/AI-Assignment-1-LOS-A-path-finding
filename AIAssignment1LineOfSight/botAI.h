@@ -14,16 +14,16 @@ class BotAI : public Creature
 private:
 public:
 	/**
-	Constructs an BotAI object
-	@param SDL_Renderer * a pointer to the renderer
-	@param Vec2 the position of the Player
-	@param int the screen width
-	@param int the screen height
+	Constructs a BotAI object
+	@param SDL_Renderer * A pointer to the renderer
+	@param Vec2 The position of the Player
+	@param int The screen width
+	@param int The screen height
 	*/
 	BotAI(Texture*, Vec2, int, int);
 
 	/**
-	Destructs an BotAI object
+	Destructs the BotAI object
 	*/
 	~BotAI();
 };
