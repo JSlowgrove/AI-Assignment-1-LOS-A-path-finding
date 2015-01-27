@@ -6,7 +6,7 @@
 Texture::Texture(SDL_Renderer* renderer, int r, int g, int b)
 {
 	/*Declaring the surface*/
-	SDL_Surface *surface;
+	SDL_Surface* surface;
 
 	/*Creating the surface*/
 	surface = SDL_CreateRGBSurface(0, 1, 1, 32, 0, 0, 0, 0);
@@ -32,7 +32,7 @@ Texture::Texture(std::string fileName, SDL_Renderer* renderer)
 	/*Error Check - If unable to load image then end program*/
 	if (!image)
 	{
-		std::cout << "Unable to load image from: " << fileName << IMG_GetError << std::endl;
+		std::cout << "Unable to load image from: " << fileName << "\n" << IMG_GetError << std::endl;
 		SDL_Delay(10000);
 		SDL_Quit();
 	}
@@ -57,7 +57,7 @@ Texture::Texture(std::string fileName, SDL_Renderer* renderer, bool magentaAlpha
 	/*Error Check - If unable to load image then end program*/
 	if (!image)
 	{
-		std::cout << "Unable to load image from: " << fileName << std::endl;
+		std::cout << "Unable to load image from: " << fileName << "\n" << std::endl;
 		SDL_Delay(10000);
 		SDL_Quit();
 	}

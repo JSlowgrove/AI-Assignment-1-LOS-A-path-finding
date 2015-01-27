@@ -82,7 +82,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="audio.h" />
+    <ClInclude Include="botA.h" />
     <ClInclude Include="botAI.h" />
+    <ClInclude Include="botB.h" />
     <ClInclude Include="creature.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="game.h" />
@@ -95,7 +97,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="audio.cpp" />
+    <ClCompile Include="botA.cpp" />
     <ClCompile Include="botAI.cpp" />
+    <ClCompile Include="botB.cpp" />
     <ClCompile Include="creature.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />

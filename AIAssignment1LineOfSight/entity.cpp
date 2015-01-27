@@ -3,11 +3,14 @@
 /**************************************************************************************************************/
 
 /*Constructs the entity object*/
-Entity::Entity(Texture * inTexture, Vec2 inPos, int w, int h)
+Entity::Entity(Texture * inTexture, Vec2 inPos, Vec2 inSource, int inSpriteW, int inSpriteH, int w, int h)
 {
 	/*initialise variables*/
 	texture = inTexture;
 	position = inPos;
+	source = inSource;
+	spriteWidth = inSpriteW;
+	spriteHeight = inSpriteH;
 	width = w;
 	height = h;
 }
@@ -25,7 +28,8 @@ Entity::~Entity()
 void Entity::display(SDL_Renderer * renderer)
 {
 	/*display the entity*/
-	texture->pushToScreen(renderer, (int)position.x, (int)position.y, width, height);
+	texture->pushSpriteToScreen(renderer, (int)position.x, (int)position.y, (int)source.x, 
+		(int)source.y, spriteWidth, spriteHeight, width, height);
 }
 
 /**************************************************************************************************************/

@@ -12,20 +12,26 @@ class Entity
 protected:
 	/**The position of the Entity*/
 	Vec2 position;
+	/**The position of the sprite in the spritesheet*/
+	Vec2 source;
+	/**The dimensions of the sprite*/
+	int spriteWidth, spriteHeight;
 	/**The dimensions of the Entity*/
-	int width;
-	int height;	
+	int width, height;	
 	/**A pointer to the Texture*/
 	Texture* texture;
 public:
 	/**
 	Constructs an Entity object
-	@param SDL_Renderer * A pointer to the renderer
+	@param Texture * A pointer to the texture
 	@param Vec2 The position of the Entity
-	@param int The screen width
-	@param int The screen height
+	@param Vec2 The position of the sprite
+	@param int The sprite width
+	@param int The sprite height
+	@param int The Entity width
+	@param int The Entity height
 	*/
-	Entity(Texture*, Vec2, int, int);
+	Entity(Texture*, Vec2, Vec2, int, int, int, int);
 
 	/**
 	Destructs the Entity object

@@ -3,7 +3,7 @@
 /**************************************************************************************************************/
 
 /*Constructs the player object*/
-Player::Player(Texture * inTexture, Vec2 inPos, int w, int h) : Creature(inTexture, inPos, w, h)
+Player::Player(Texture * inTexture, Vec2 inPos, int w, int h) : Creature(inTexture, inPos, Vec2(140.0f, 0.0f), 70, 70, w, h)
 {
 }
 

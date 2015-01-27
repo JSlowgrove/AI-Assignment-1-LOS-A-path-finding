@@ -17,12 +17,15 @@ protected:
 public:
 	/**
 	Constructs a Creature object
-	@param SDL_Renderer * A pointer to the renderer
+	@param Texture * A pointer to the Texture
 	@param Vec2 The position of the Creature
-	@param int The screen width
-	@param int The screen height
+	@param Vec2 The position of the sprite
+	@param int The sprite width
+	@param int The sprite height
+	@param int The Creature width
+	@param int The Creature height
 	*/
-	Creature(Texture*, Vec2, int, int);
+	Creature(Texture*, Vec2, Vec2, int, int, int, int);
 
 	/**
 	Destructs the Creature object

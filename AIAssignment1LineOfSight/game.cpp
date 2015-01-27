@@ -3,9 +3,18 @@
 /**************************************************************************************************************/
 
 /*Constructs the game object*/
-Game::Game(StateManager * inStateManager, SDL_Renderer* inRenderer, int inWidth, int inHeight) 
+Game::Game(StateManager* inStateManager, SDL_Renderer* inRenderer, int inWidth, int inHeight) 
 	: State(inStateManager, inRenderer, inWidth, inHeight)
 {
+	/*initialise the textures*/
+	background = new Texture("img/background.png", renderer);
+	spritesheet = new Texture("img/spritesheet70x70.png", renderer);
+	
+	/*initialise the entities*/
+	walls.push_back(new Wall(spritesheet, Vec2(100.0f, 100.0f), 32, 32));
+	player = new Player(spritesheet, Vec2(200.0f, 100.0f), 32, 32);
+	botA = new BotA(spritesheet, Vec2(300.0f, 100.0f), 32, 32);
+	botB = new BotB(spritesheet, Vec2(400.0f, 100.0f), 32, 32);
 }
 
 /**************************************************************************************************************/
@@ -63,6 +72,15 @@ void Game::draw()
 
 	/*Clear the entire screen to the set colour*/
 	SDL_RenderClear(renderer);
+
+	/*display the background image*/
+	background->pushToScreen(renderer, 0, 0);
+
+	/*TMP display other entities*/
+	walls[0]->display(renderer);
+	player->display(renderer);
+	botA->display(renderer);
+	botB->display(renderer);
 
 	/*display renderer*/
 	SDL_RenderPresent(renderer);

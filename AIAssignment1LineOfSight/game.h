@@ -5,6 +5,10 @@
 #include "stateManager.h"
 #include "texture.h"
 #include "audio.h"
+#include "wall.h"
+#include "player.h"
+#include "botA.h"
+#include "botB.h"
 
 /**
 @brief Creates a Game object that inherits State
@@ -13,6 +17,14 @@ Creates a Game object that inherits State and runs the Game.
 class Game : public State
 {
 private:
+	/**Texture pointers*/
+	Texture* background;
+	Texture* spritesheet;
+	/**Entity pointers*/
+	std::vector<Wall*> walls;
+	Player* player;
+	BotA* botA;
+	BotB* botB;
 public:
 	/**
 	Constructs an Game object

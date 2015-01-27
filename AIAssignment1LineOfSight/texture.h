@@ -30,8 +30,7 @@ public:
 
 	/**
 	Constructs a Texture
-	Creates a Texture using an image location and a renderer. The magenta pixels of this image can
-	represent alpha if needed. This is for use with SDL image.
+	Creates a Texture using an image location and a renderer. This is for use with SDL image.
 	@param std::string The location of the image file.
 	@param SDL_Renderer* The renderer.
 	*/

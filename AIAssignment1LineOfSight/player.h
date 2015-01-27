@@ -17,10 +17,10 @@ private:
 public:
 	/**
 	Constructs a Player object
-	@param SDL_Renderer * a pointer to the renderer
+	@param Texture * a pointer to the Texture
 	@param Vec2 the position of the Player
-	@param int the screen width
-	@param int the screen height
+	@param int the width of the Player
+	@param int the height of the Player
 	*/
 	Player(Texture*, Vec2, int, int);
 

@@ -11,16 +11,19 @@ Creates a BotAI object that inherits Creature and contains the details for the B
 */
 class BotAI : public Creature
 {
-private:
+protected:
 public:
 	/**
 	Constructs a BotAI object
-	@param SDL_Renderer * A pointer to the renderer
-	@param Vec2 The position of the Player
-	@param int The screen width
-	@param int The screen height
+	@param Texture * A pointer to the Texture
+	@param Vec2 The position of the BotAI
+	@param Vec2 The position of the sprite
+	@param int The sprite width
+	@param int The sprite height
+	@param int The BotAI width
+	@param int The BotAI height
 	*/
-	BotAI(Texture*, Vec2, int, int);
+	BotAI(Texture*, Vec2, Vec2, int, int, int, int);
 
 	/**
 	Destructs the BotAI object

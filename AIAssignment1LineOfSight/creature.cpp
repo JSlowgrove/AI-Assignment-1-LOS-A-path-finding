@@ -3,7 +3,8 @@
 /**************************************************************************************************************/
 
 /*Constructs the creature object*/
-Creature::Creature(Texture * inTexture, Vec2 inPos, int w, int h) : Entity(inTexture, inPos, w, h)
+Creature::Creature(Texture * inTexture, Vec2 inPos, Vec2 inSource, int inSpriteW, int inSpriteH, int w, int h)
+	: Entity(inTexture, inPos, inSource, inSpriteW, inSpriteH, w, h)
 {
 	/*initialises the velocities*/
 	velocities = { 0.0f, 0.0f };

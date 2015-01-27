@@ -15,10 +15,10 @@ private:
 public:
 	/**
 	Constructs a Wall object
-	@param SDL_Renderer * A pointer to the renderer
+	@param Texture * A pointer to the Texture
 	@param Vec2 The position of the Wall
-	@param int The screen width
-	@param int The screen height
+	@param int the width of the Wall
+	@param int the height of the Wall
 	*/
 	Wall(Texture*, Vec2, int, int);
 
