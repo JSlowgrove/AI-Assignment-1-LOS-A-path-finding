@@ -86,6 +86,7 @@
     <ClInclude Include="state.h" />
     <ClInclude Include="stateManager.h" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="vec2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="audio.cpp" />
