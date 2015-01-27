@@ -11,10 +11,10 @@ Game::Game(StateManager* inStateManager, SDL_Renderer* inRenderer, int inWidth, 
 	spritesheet = new Texture("img/spritesheet70x70.png", renderer);
 	
 	/*initialise the entities*/
-	walls.push_back(new Wall(spritesheet, Vec2(100.0f, 100.0f), 32, 32));
-	player = new Player(spritesheet, Vec2(200.0f, 100.0f), 32, 32);
-	botA = new BotA(spritesheet, Vec2(300.0f, 100.0f), 32, 32);
-	botB = new BotB(spritesheet, Vec2(400.0f, 100.0f), 32, 32);
+	map = new Map(spritesheet, "txt/map.txt");
+	player = new Player(spritesheet, map->getInitialPlayer(), 30, 30);
+	botA = new BotA(spritesheet, map->getInitialBotA(), 30, 30);
+	botB = new BotB(spritesheet, map->getInitialBotB(), 30, 30);
 }
 
 /**************************************************************************************************************/
@@ -76,8 +76,13 @@ void Game::draw()
 	/*display the background image*/
 	background->pushToScreen(renderer, 0, 0);
 
-	/*TMP display other entities*/
-	walls[0]->display(renderer);
+	/*display the walls*/
+	for (int i = 0; i < map->getNumberOfWalls(); i++)
+	{
+		map->getWall(i)->display(renderer);
+	}
+
+	/*display other entities*/
 	player->display(renderer);
 	botA->display(renderer);
 	botB->display(renderer);

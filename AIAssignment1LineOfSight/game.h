@@ -5,6 +5,7 @@
 #include "stateManager.h"
 #include "texture.h"
 #include "audio.h"
+#include "map.h"
 #include "wall.h"
 #include "player.h"
 #include "botA.h"
@@ -21,13 +22,13 @@ private:
 	Texture* background;
 	Texture* spritesheet;
 	/**Entity pointers*/
-	std::vector<Wall*> walls;
+	Map* map;
 	Player* player;
 	BotA* botA;
 	BotB* botB;
 public:
 	/**
-	Constructs an Game object
+	Constructs a Game object
 	@param StateManager * a pointer to the StateManager
 	@param SDL_Renderer * a pointer to the renderer
 	@param int the screen width
@@ -36,7 +37,7 @@ public:
 	Game(StateManager *, SDL_Renderer *, int, int);
 
 	/**
-	Destructs an Game object
+	Destructs a Game object
 	*/
 	~Game();
 
