@@ -6,8 +6,8 @@
 #include "entity.h"
 
 /**
-@brief Creates an Creature object that inherits Entity.
-Creates an Creature object that inherits Entity and contains the details for the Creature.
+@brief Creates a Creature object that inherits Entity.
+Creates a Creature object that inherits Entity and contains the details for the Creature.
 */
 class Creature : public Entity
 {

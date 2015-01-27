@@ -7,8 +7,8 @@
 #include "audio.h"
 
 /**
-@brief Creates an Game object that inherits State
-Creates an Game object that inherits State and runs the Game.
+@brief Creates a Game object that inherits State
+Creates a Game object that inherits State and runs the Game.
 */
 class Game : public State
 {

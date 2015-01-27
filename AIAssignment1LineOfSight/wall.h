@@ -6,8 +6,8 @@
 #include "entity.h"
 
 /**
-@brief Creates an Wall object that inherits Entity.
-Creates an Wall object that inherits Entity and contains the details for the Wall.
+@brief Creates a Wall object that inherits Entity.
+Creates a Wall object that inherits Entity and contains the details for the Wall.
 */
 class Wall : public Entity
 {

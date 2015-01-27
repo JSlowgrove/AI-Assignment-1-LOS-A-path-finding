@@ -6,8 +6,8 @@
 #include "creature.h"
 
 /**
-@brief Creates an Player object that inherits Creature.
-Creates an Player object that inherits Creature and contains the details for the Player.
+@brief Creates a Player object that inherits Creature.
+Creates a Player object that inherits Creature and contains the details for the Player.
 */
 class Player : public Creature
 {

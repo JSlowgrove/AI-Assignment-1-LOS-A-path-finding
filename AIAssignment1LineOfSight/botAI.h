@@ -6,8 +6,8 @@
 #include "creature.h"
 
 /**
-@brief Creates an BotAI object that inherits Creature.
-Creates an BotAI object that inherits Creature and contains the details for the BotAI.
+@brief Creates a BotAI object that inherits Creature.
+Creates a BotAI object that inherits Creature and contains the details for the BotAI.
 */
 class BotAI : public Creature
 {

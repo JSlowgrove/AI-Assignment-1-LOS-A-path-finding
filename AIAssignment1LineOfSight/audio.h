@@ -5,7 +5,7 @@
 #include <iostream>
 
 /**
-@brief Creates a Audio object to handle the SDL_Mixer.
+@brief Creates an Audio object to handle the SDL_Mixer.
 */
 class Audio
 {
@@ -15,15 +15,13 @@ private:
 public:
 	/**
 	Constructs an Audio object
-	Constructs the Audio object.
-	@param std::string the file to be loaded
-	@param bool is it a music file? if false its a sound file
+	@param std::string The file to be loaded
+	@param bool Is it a music file? If false its a sound file
 	*/
 	Audio(std::string, bool);
 
 	/**
-	De-constructs a Audio object
-	De-constructs the Audio object
+	Destructs a Audio object
 	*/
 	~Audio();
 
@@ -34,7 +32,6 @@ public:
 	void startAudio();
 
 	/**
-	Plays the sound
 	Plays the sound effect
 	*/
 	void playEffect();

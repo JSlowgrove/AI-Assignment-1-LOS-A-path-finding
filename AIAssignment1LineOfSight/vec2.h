@@ -1,12 +1,12 @@
 #pragma once
 
 /**
-@brief Creates an Vec2 structure with functions
-Creates an Vec2 structure with overloaded operators to create a new variable type for use as a 2D vector.
+@brief Creates a Vec2 structure with functions
+Creates a Vec2 structure with overloaded operators to create a new variable type for use as a 2D vector.
 */
 struct  Vec2
 {
-	/*position variables*/
+	/**Position variables*/
 	float x;
 	float y;
 	
