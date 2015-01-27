@@ -85,6 +85,7 @@
     <ClInclude Include="creature.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="stateManager.h" />
     <ClInclude Include="texture.h" />
@@ -96,6 +97,7 @@
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="stateManager.cpp" />
     <ClCompile Include="texture.cpp" />
