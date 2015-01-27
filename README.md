@@ -2,6 +2,9 @@
 
 Created by Jamie Slowgrove.  
 You can do what you want with the code and images in this project, however you must credit me and add a link back to the git repository.  
+
+Art used is from the Kenney Asset Pack:  
+http://kenney.itch.io/kenney-donation  
   
 Created using SDL 2.0, SLD_Image 2.0, SDL_Mixer and SDL_ttf 2.0:  
 https://www.libsdl.org/  
