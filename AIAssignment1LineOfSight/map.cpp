@@ -123,7 +123,7 @@ void Map::loadMap(std::string fileName)
 int Map::getMapPositionIndex(int x, int y)
 {
 	/*return the index*/
-	return map[x][y]->index;
+	return map[y][x]->index;
 }
 
 /**************************************************************************************************************/
@@ -132,7 +132,7 @@ int Map::getMapPositionIndex(int x, int y)
 char Map::getMapPositionType(int x, int y)
 {
 	/*return the type*/
-	return map[x][y]->type;
+	return map[y][x]->type;
 }
 
 /**************************************************************************************************************/

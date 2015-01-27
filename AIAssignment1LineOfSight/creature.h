@@ -4,6 +4,7 @@
 #include "texture.h"
 #include "vec2.h"
 #include "entity.h"
+#include "map.h"
 
 /**
 @brief Creates a Creature object that inherits Entity.
@@ -16,6 +17,22 @@ protected:
 	Vec2 velocities;
 	/**The min and max tiles that the creature is on*/
 	int minX, maxX, minY, maxY;
+
+	/**
+	Tests if the Creature collides with a Wall for a certain direction and performs an act upon the result
+	@param Map * A pointer to the Map
+	@param float The delta time
+	@param float The velocity from the axis to be tested
+	@param float The position from the axis to be tested
+	@param int The minimum i index
+	@param int The maximum i index
+	@param int The minimum j index
+	@param int The maximum j index
+	@param char The axis being checked
+	@param float Returns the new velocity.
+	*/
+	float collision(Map *, float, float, float, int, int, int, int, char);
+
 public:
 	/**
 	Constructs a Creature object
@@ -57,4 +74,11 @@ public:
 	@param SDL_Renderer * A pointer to the renderer
 	*/
 	void displayTiles(SDL_Renderer*);
+
+	/**
+	Tests if the Creature collides with a Wall and performs an act upon the result
+	@param Map * A pointer to the Map
+	@param float The delta time
+	*/
+	void collisionUpdate(Map *, float);
 };

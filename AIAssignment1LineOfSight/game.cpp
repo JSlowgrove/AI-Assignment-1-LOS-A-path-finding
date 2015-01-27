@@ -104,6 +104,9 @@ void Game::update(float dt)
 	/*handle the player input*/
 	player->handleCommands();
 
+	/*update the player collisions*/
+	player->collisionUpdate(map, dt);
+
 	/*update the player*/
 	player->updatePosition(dt);
 }
