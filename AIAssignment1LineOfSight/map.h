@@ -13,7 +13,9 @@
 class Map
 {
 private:
-	/**A structure for use with the Map*/
+	/**
+	A structure for use with the Map
+	*/
 	struct id
 	{
 		/*The type of the Entity - x = Blank, w = Wall*/

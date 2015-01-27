@@ -14,6 +14,8 @@ class Creature : public Entity
 protected:
 	/**The Creature velocities*/
 	Vec2 velocities;
+	/**The min and max tiles that the creature is on*/
+	int minX, maxX, minY, maxY;
 public:
 	/**
 	Constructs a Creature object
@@ -49,4 +51,10 @@ public:
 	@returns Vec2 The velocities
 	*/
 	Vec2 getVelocities();
+
+	/**
+	Display the tiles that the Creature occupies
+	@param SDL_Renderer * A pointer to the renderer
+	*/
+	void displayTiles(SDL_Renderer*);
 };
