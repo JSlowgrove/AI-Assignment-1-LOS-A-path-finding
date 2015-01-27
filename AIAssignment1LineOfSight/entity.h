@@ -28,7 +28,7 @@ public:
 	Entity(Texture*, Vec2, int, int);
 
 	/**
-	Destructs an Entity object
+	Destructs the Entity object
 	*/
 	~Entity();
 
