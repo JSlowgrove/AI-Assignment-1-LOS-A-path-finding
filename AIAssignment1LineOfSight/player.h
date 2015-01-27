@@ -52,4 +52,9 @@ public:
 	@param bool The new state of the command
 	*/
 	void commandRight(bool);
+
+	/**
+	Handle the current set of commands
+	*/
+	void handleCommands();
 };

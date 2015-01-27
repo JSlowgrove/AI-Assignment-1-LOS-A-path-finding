@@ -49,3 +49,47 @@ void Player::commandRight(bool command)
 	/*sets the state of the command*/
 	right = command;
 }
+
+/**************************************************************************************************************/
+
+/*handles the commands*/
+void Player::handleCommands()
+{
+	/*if the player should go up*/
+	if (up && !down)
+	{
+		/*set the y velocity to -100*/
+		velocities.y = -100.0f;
+	}
+	/*if the player should go down*/
+	else if (down && !up)
+	{
+		/*set the y velocity to 100*/
+		velocities.y = 100.0f;
+	}
+	/*if the player should stop on the y axis*/
+	else
+	{
+		/*set the y velocity to 0*/
+		velocities.y = 0.0f;
+	}
+
+	/*if the player should go left*/
+	if (left && !right)
+	{
+		/*set the x velocity to -100*/
+		velocities.x = -100.0f;
+	}
+	/*if the player should go right*/
+	else if (right && !left)
+	{
+		/*set the x velocity to 100*/
+		velocities.x = 100.0f;
+	}
+	/*if the player should stop on the x axis*/
+	else
+	{
+		/*set the x velocity to 0*/
+		velocities.x = 0.0f;
+	}
+}

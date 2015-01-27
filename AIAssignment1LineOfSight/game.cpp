@@ -36,11 +36,6 @@ bool Game::input()
 	{
 		switch (incomingEvent.type)
 		{
-		case SDL_QUIT: /*If player closes the window, end the game loop*/
-
-			return false;
-			break;
-
 		case SDL_KEYDOWN:
 
 			switch (incomingEvent.key.keysym.sym)
@@ -49,7 +44,53 @@ bool Game::input()
 
 				return false;
 				break;
+
+			case SDLK_UP: /*If up or w is pressed*/
+			case SDLK_w:
+				player->commandUp(true);
+				break;
+
+			case SDLK_DOWN:/*If down or s is pressed*/
+			case SDLK_s:
+				player->commandDown(true);
+				break;
+
+			case SDLK_LEFT:/*If left or a is pressed*/
+			case SDLK_a:
+				player->commandLeft(true);
+				break;
+
+			case SDLK_RIGHT:/*If right or d is pressed*/
+			case SDLK_d:
+				player->commandRight(true);
+				break;
 			}
+			break;
+
+		case SDL_KEYUP:
+			switch (incomingEvent.key.keysym.sym)
+			{
+			case SDLK_UP: /*If up or w is released*/
+			case SDLK_w:
+				player->commandUp(false);
+				break;
+
+			case SDLK_DOWN:/*If down or s is released*/
+			case SDLK_s:
+				player->commandDown(false);
+				break;
+
+			case SDLK_LEFT:/*If left or a is released*/
+			case SDLK_a:
+				player->commandLeft(false);
+				break;
+
+			case SDLK_RIGHT:/*If right or d is released*/
+			case SDLK_d:
+				player->commandRight(false);
+				break;
+			}
+			break;
 		}
 	}
 	return true;
@@ -60,6 +101,11 @@ bool Game::input()
 /*updates the game*/
 void Game::update(float dt)
 {
+	/*handle the player input*/
+	player->handleCommands();
+
+	/*update the player*/
+	player->updatePosition(dt);
 }
 
 /**************************************************************************************************************/
@@ -81,6 +127,16 @@ void Game::draw()
 	{
 		map->getWall(i)->display(renderer);
 	}
+
+	/*set draw colour to yellow*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 0xFF);
+
+	/*draw a line between the player and bot a*/
+	SDL_RenderDrawLine(renderer, 
+		(int)botA->getPosition().x + (botA->getWidth()*0.5f), 
+		(int)botA->getPosition().y + (botA->getHeight()*0.5f), 
+		(int)player->getPosition().x + (player->getWidth()*0.5f), 
+		(int)player->getPosition().y + (player->getHeight()*0.5f));
 
 	/*display other entities*/
 	player->display(renderer);
