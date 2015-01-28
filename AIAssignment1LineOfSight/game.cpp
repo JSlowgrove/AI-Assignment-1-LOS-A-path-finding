@@ -142,9 +142,9 @@ void Game::draw()
 		(int)player->getPosition().y + (player->getHeight()*0.5f));
 
 	/*draw the intersection tiles with the creatures*/
-	player->displayTiles(renderer);
-	botA->displayTiles(renderer);
-	botB->displayTiles(renderer);
+	player->displayTiles(renderer, map);
+	botA->displayTiles(renderer, map);
+	botB->displayTiles(renderer, map);
 
 	/*display other entities*/
 	player->display(renderer);

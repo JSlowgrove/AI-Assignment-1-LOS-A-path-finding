@@ -155,6 +155,24 @@ int Map::getNumberOfWalls()
 
 /**************************************************************************************************************/
 
+/*gets the number of x objects in a row*/
+int Map::getNumberOfXObjects()
+{
+	/*return the number of x objects*/
+	return (int)map[0].size();
+}
+
+/**************************************************************************************************************/
+
+/*gets the number of rows in the map*/
+int Map::getNumberOfYObjects()
+{
+	/*return the number of rows*/
+	return (int)map.size();
+}
+
+/**************************************************************************************************************/
+
 /*gets the initial player position*/
 Vec2 Map::getInitialPlayer()
 {

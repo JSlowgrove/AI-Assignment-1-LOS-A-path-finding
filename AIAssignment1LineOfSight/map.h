@@ -97,6 +97,18 @@ public:
 	int getNumberOfWalls();
 
 	/**
+	Getter # Gets the number of x objects (in a row of the map)
+	@returns int The number of x objects (in a row of the map)
+	*/
+	int getNumberOfXObjects();
+
+	/**
+	Getter # Gets the number of y objects (rows of the map)
+	@returns int The number of y objects (rows of the map)
+	*/
+	int getNumberOfYObjects();
+
+	/**
 	Getter # Gets the initial Player position
 	@returns Vec2 The initial Player position
 	*/

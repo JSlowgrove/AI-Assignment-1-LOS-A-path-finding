@@ -33,6 +33,17 @@ protected:
 	*/
 	float collision(Map *, float, float, float, int, int, int, int, char);
 
+	/**
+	Display tiles being tested for collision
+	@param SDL_Renderer * A pointer to the renderer
+	@param Map * A pointer to the Map
+	@param int The minimum i index
+	@param int The maximum i index
+	@param int The minimum j index
+	@param int The maximum j index
+	*/
+	void displayCollisionTest(SDL_Renderer*, Map *, int, int, int, int);
+
 public:
 	/**
 	Constructs a Creature object
@@ -72,8 +83,9 @@ public:
 	/**
 	Display the tiles that the Creature occupies
 	@param SDL_Renderer * A pointer to the renderer
+	@param Map * A pointer to the Map
 	*/
-	void displayTiles(SDL_Renderer*);
+	void displayTiles(SDL_Renderer*, Map*);
 
 	/**
 	Tests if the Creature collides with a Wall and performs an act upon the result

@@ -56,7 +56,7 @@ Vec2 Creature::getVelocities()
 /**************************************************************************************************************/
 
 /*displays the tiles the creature occupies*/
-void Creature::displayTiles(SDL_Renderer* renderer)
+void Creature::displayTiles(SDL_Renderer* renderer, Map* map)
 {
 	/*creates a rectangle using the tiles*/
 	SDL_Rect box;
@@ -70,6 +70,71 @@ void Creature::displayTiles(SDL_Renderer* renderer)
 
 	/*draw the tiles outline*/
 	SDL_RenderDrawRect(renderer, &box);
+
+	/*check for collisions up*/
+	if (velocities.y < 0)
+	{
+		/*display the tested tiles*/
+		displayCollisionTest(renderer, map, 0, minY, minX, maxX);
+	}
+	/*check for collisions down*/
+	if (velocities.y > 0)
+	{
+		/*display the tested tiles*/
+		displayCollisionTest(renderer, map, maxY, map->getNumberOfYObjects() - 1, minX, maxX);
+	}
+	/*check for collisions left*/
+	if (velocities.x < 0)
+	{
+		/*display the tested tiles*/
+		displayCollisionTest(renderer, map, minY, maxY, 0, minX);
+	}
+	/*check for collisions right*/
+	if (velocities.x > 0)
+	{
+		/*display the tested tiles*/
+		displayCollisionTest(renderer, map, minY, maxY, maxX, map->getNumberOfXObjects() - 1);
+	}
+}
+
+/**************************************************************************************************************/
+
+/*displays the tiles being tested for collision*/
+void Creature::displayCollisionTest(SDL_Renderer* renderer, Map* map, int minI, int maxI, int minJ, int maxJ)
+{
+	/*creates a rectangle*/
+	SDL_Rect box;
+
+	/*test only the tiles within the max and min tiles on the opposite axis*/
+	for (int i = minI; i <= maxI; i++)
+	{
+		/*test only the tiles within the min and max tiles on the current axis*/
+		for (int j = minJ; j <= maxJ; j++)
+		{
+			/*check if the type of the tile*/
+			switch (map->getMapPositionType(j, i))
+			{
+				/*if tile is a wall*/
+			case 'w':
+				/*set the draw colour to red*/
+				SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
+				break;
+
+			/*if tile is anything else*/
+			default:
+				/*set the draw colour to cyan*/
+				SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0xFF, 0xFF);
+				break;
+			}
+			/*update the box for the tile*/
+			box.x = j * 32;
+			box.y = i * 32;
+			box.w = box.h = 32;
+
+			/*draw the tiles outline*/
+			SDL_RenderDrawRect(renderer, &box);
+		}
+	}
 }
 
 /**************************************************************************************************************/
@@ -80,23 +145,23 @@ void Creature::collisionUpdate(Map* map, float dt)
 	/*check for collisions up*/
 	if (velocities.y < 0)
 	{
-		velocities.y = collision(map, dt, velocities.y, position.y, 0, minY, minX, maxX, 'y');
+		velocities.y = collision(map, dt, velocities.y, position.y, 0, minY, minX, maxX, 'u');
 	}
 	/*check for collisions down*/
-	/*if (velocities.y > 0)
+	if (velocities.y > 0)
 	{
-		collision(map, dt);
-	}*/
+		velocities.y = collision(map, dt, velocities.y, position.y, maxY, map->getNumberOfYObjects()-1, minX, maxX, 'd');
+	}
 	/*check for collisions left*/
 	if (velocities.x < 0)
 	{
-		velocities.x = collision(map, dt, velocities.x, position.x, minY, maxY, 0, minX, 'x');
+		velocities.x = collision(map, dt, velocities.x, position.x, minY, maxY, 0, minX, 'l');
 	}
 	/*check for collisions right*/
-	/*if (velocities.x > 0)
+	if (velocities.x > 0)
 	{
-		collision(map, dt);
-	}*/
+		velocities.x = collision(map, dt, velocities.x, position.x, minY, maxY, maxX, map->getNumberOfXObjects()-1, 'r');
+	}
 }
 
 /**************************************************************************************************************/
@@ -118,8 +183,29 @@ float Creature::collision(Map* map, float dt, float velocity, float currentPos, 
 				/*perform a check depending on the axis to test*/
 				switch (axis)
 				{
-				/*check if its is interesting*/
-				case 'x':
+				/*check if its is interesting and going up*/
+				case 'u':
+					if (map->getWall(map->getMapPositionIndex(j, i))->getPosition().y
+						+ map->getWall(map->getMapPositionIndex(j, i))->getHeight()
+						>= currentPos + (velocity * dt))
+					{
+						/*stop the player in the given axis*/
+						velocity = 0.0f;
+					}
+					break;
+
+				/*check if its is interesting and going down*/
+				case 'd':
+					if (map->getWall(map->getMapPositionIndex(j, i))->getPosition().y
+						<= currentPos + (velocity * dt) + height)
+					{
+						/*stop the player in the given axis*/
+						velocity = 0.0f;
+					}
+					break;
+
+				/*check if its is interesting and going left*/
+				case 'l':
 					if (map->getWall(map->getMapPositionIndex(j, i))->getPosition().x
 						+ map->getWall(map->getMapPositionIndex(j, i))->getWidth()
 						>= currentPos + (velocity * dt))
@@ -128,12 +214,11 @@ float Creature::collision(Map* map, float dt, float velocity, float currentPos, 
 						velocity = 0.0f;
 					}
 					break;
-
-				/*check if its is interesting*/
-				case 'y':
-					if (map->getWall(map->getMapPositionIndex(j, i))->getPosition().y
-						+ map->getWall(map->getMapPositionIndex(j, i))->getHeight()
-						>= currentPos + (velocity * dt))
+				
+				/*check if its is interesting and going right*/
+				case 'r':
+					if (map->getWall(map->getMapPositionIndex(j, i))->getPosition().x
+						<= currentPos + (velocity * dt) + width)
 					{
 						/*stop the player in the given axis*/
 						velocity = 0.0f;
