@@ -15,6 +15,9 @@ Game::Game(StateManager* inStateManager, SDL_Renderer* inRenderer, int inWidth, 
 	player = new Player(spritesheet, map->getInitialPlayer(), 30, 30);
 	botA = new BotA(spritesheet, map->getInitialBotA(), 30, 30);
 	botB = new BotB(spritesheet, map->getInitialBotB(), 30, 30);
+
+	/*initialise developer mode to off*/
+	developer = false;
 }
 
 /**************************************************************************************************************/
@@ -63,6 +66,17 @@ bool Game::input()
 			case SDLK_RIGHT:/*If right or d is pressed*/
 			case SDLK_d:
 				player->commandRight(true);
+				break;
+
+			case SDLK_TAB:/*if tab is pressed switch developer mode*/
+				if (developer)
+				{
+					developer = false;
+				}
+				else
+				{
+					developer = true;
+				}
 				break;
 			}
 			break;
@@ -131,20 +145,28 @@ void Game::draw()
 		map->getWall(i)->display(renderer);
 	}
 
-	/*set draw colour to yellow*/
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 0xFF);
+	/*developer display*/
+	if (developer)
+	{
+		/*set draw colour to yellow*/
+		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 0xFF);
 
-	/*draw a line between the player and bot a*/
-	SDL_RenderDrawLine(renderer, 
-		(int)botA->getPosition().x + (botA->getWidth()*0.5f), 
-		(int)botA->getPosition().y + (botA->getHeight()*0.5f), 
-		(int)player->getPosition().x + (player->getWidth()*0.5f), 
-		(int)player->getPosition().y + (player->getHeight()*0.5f));
+		/*draw a line between the player and bot a*/
+		SDL_RenderDrawLine(renderer,
+			(int)botA->getPosition().x + (botA->getWidth()*0.5f),
+			(int)botA->getPosition().y + (botA->getHeight()*0.5f),
+			(int)player->getPosition().x + (player->getWidth()*0.5f),
+			(int)player->getPosition().y + (player->getHeight()*0.5f));
 
-	/*draw the intersection tiles with the creatures*/
-	player->displayTiles(renderer, map);
-	botA->displayTiles(renderer, map);
-	botB->displayTiles(renderer, map);
+		/*draw the line of sight calculations*/
+		LOS::drawLineOfSight(botA->getPosition() + Vec2(botA->getWidth()*0.5f, botA->getHeight()*0.5f),
+			player->getPosition() + Vec2(player->getWidth()*0.5f, player->getHeight()*0.5f), map, renderer);
+
+		/*draw the intersection tiles with the creatures*/
+		player->displayTiles(renderer, map);
+		botA->displayTiles(renderer, map);
+		botB->displayTiles(renderer, map);
+	}
 
 	/*display other entities*/
 	player->display(renderer);
