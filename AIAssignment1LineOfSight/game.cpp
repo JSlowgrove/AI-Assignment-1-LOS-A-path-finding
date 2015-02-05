@@ -121,8 +121,20 @@ void Game::update(float dt)
 	/*update the player collisions*/
 	player->collisionUpdate(map, dt);
 
+	/*test the bots for player line of sight*/
+	botA->playerLineOfSight(player, map);
+	botB->playerLineOfSight(player, map);
+
+	/*update the bot collisions*/
+	botA->collisionUpdate(map, dt);
+	botB->collisionUpdate(map, dt);
+
 	/*update the player*/
 	player->updatePosition(dt);
+
+	/*update the bots*/
+	botA->updatePosition(dt);
+	botB->updatePosition(dt);
 }
 
 /**************************************************************************************************************/
@@ -160,6 +172,8 @@ void Game::draw()
 
 		/*draw the line of sight calculations*/
 		LOS::drawLineOfSight(botA->getPosition() + Vec2(botA->getWidth()*0.5f, botA->getHeight()*0.5f),
+			player->getPosition() + Vec2(player->getWidth()*0.5f, player->getHeight()*0.5f), map, renderer);
+		LOS::drawLineOfSight(botB->getPosition() + Vec2(botB->getWidth()*0.5f, botB->getHeight()*0.5f),
 			player->getPosition() + Vec2(player->getWidth()*0.5f, player->getHeight()*0.5f), map, renderer);
 
 		/*draw the intersection tiles with the creatures*/

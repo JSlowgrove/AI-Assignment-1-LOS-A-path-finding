@@ -4,6 +4,9 @@
 #include "texture.h"
 #include "vec2.h"
 #include "creature.h"
+#include "player.h"
+#include "map.h"
+#include "lineOfSight.h"
 
 /**
 @brief Creates a BotAI object that inherits Creature.
@@ -29,4 +32,6 @@ public:
 	Destructs the BotAI object
 	*/
 	~BotAI();
+
+	void playerLineOfSight(Player*, Map*);
 };
