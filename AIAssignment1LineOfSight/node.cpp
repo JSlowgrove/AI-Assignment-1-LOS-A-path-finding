@@ -3,7 +3,7 @@
 /**************************************************************************************************************/
 
 /*Constructs the node object*/
-Node::Node()
+Node::Node(int nodeXIndex, int nodeYIndex)
 {
 	/*initialise the booleans*/
 	startNode = false;
@@ -11,8 +11,12 @@ Node::Node()
 	safe = true;
 
 	/*initialise the variables*/
+	this->nodeXIndex = nodeXIndex;
+	this->nodeYIndex = nodeYIndex;
 	parentNodeXIndex = 0;
 	parentNodeYIndex = 0;
+	cost = 0;
+	fScore = 0;
 }
 
 
@@ -103,4 +107,58 @@ bool Node::getSafeNode()
 {
 	/*return endNode*/
 	return safe;
+}
+
+/**************************************************************************************************************/
+
+/*set the cost*/
+void Node::setCostNode(int cost)
+{
+	/*set the node cost*/
+	this->cost = cost;
+}
+
+/**************************************************************************************************************/
+
+/*get the cost*/
+int Node::getCostNode()
+{
+	/*return the node cost*/
+	return cost;
+}
+
+/**************************************************************************************************************/
+
+/*set the fScore*/
+void Node::setFScoreNode(int fScore)
+{
+	/*set the node fScore*/
+	this->fScore = fScore;
+}
+
+/**************************************************************************************************************/
+
+/*get the fScore*/
+int Node::getFScoreNode()
+{
+	/*return the node fScore*/
+	return fScore;
+}
+
+/**************************************************************************************************************/
+
+/*get the x index*/
+int Node::getXIndex()
+{
+	/*return the node x index*/
+	return nodeXIndex;
+}
+
+/**************************************************************************************************************/
+
+/*get the y index*/
+int Node::getYIndex()
+{
+	/*return the node y index*/
+	return nodeYIndex;
 }

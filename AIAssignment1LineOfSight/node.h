@@ -10,16 +10,25 @@ private:
 	/*the index of the parent node*/
 	int parentNodeXIndex;
 	int parentNodeYIndex;
+	/*the index of the node*/
+	int nodeXIndex;
+	int nodeYIndex;
 	/*boolean values to if they are a specific node*/
 	bool startNode;
 	bool endNode;
 	/*is the node safe to walk on*/
 	bool safe;
+	/*the cost to move to the node*/
+	int cost;
+	/*the f score of the node*/
+	int fScore;
 public:
 	/**
 	Constructs a Node object
+	@param int The Node x index
+	@param int The Node y index
 	*/
-	Node();
+	Node(int nodeXIndex, int nodeYIndex);
 
 	/**
 	Destructs a Game object
@@ -80,4 +89,40 @@ public:
 	@return bool If the node is safe
 	*/
 	bool getSafeNode();
+
+	/**
+	Setter # Set the cost
+	@param bool The cost to move to the node
+	*/
+	void setCostNode(int cost);
+
+	/**
+	Getter # Get the cost
+	@return int The cost to move to the node
+	*/
+	int getCostNode();
+
+	/**
+	Setter # Set the fScore
+	@param bool The fScore to of the node
+	*/
+	void setFScoreNode(int fScore);
+
+	/**
+	Getter # Get the fScore
+	@return int The fScore to of the node
+	*/
+	int getFScoreNode();
+
+	/**
+	Getter # Get the x index
+	@return int The x index of the node
+	*/
+	int getXIndex();
+
+	/**
+	Getter # Get the y index
+	@return int The y index of the node
+	*/
+	int getYIndex();
 };

@@ -16,6 +16,23 @@ private:
 	/**The number of nodes*/
 	int xNodes;
 	int yNodes;
+	/**The current node index*/
+	int currentX;
+	int currentY;
+
+	/**
+	Check the surrounding nodes
+	@param int The parent node x index value
+	@param int The parent node y index value
+	*/
+	void checkNodes(int parentX, int parentY);
+
+	/**
+	Find the next node
+	@param int The value of the heuristic
+	*/
+	void findNextNode(int h);
+
 public:
 	/**
 	Constructs an AStar object
@@ -37,11 +54,4 @@ public:
 	@param int The end y index value
 	*/
 	void findNewPath(int startX, int startY, int endX, int endY);
-
-	/**
-	Check the surrounding nodes
-	@param int The parent node x index value
-	@param int The parent node y index value
-	*/
-	void checkNodes(int parentX, int parentY);
 };

@@ -15,7 +15,7 @@ AStar::AStar(int xNodes, int yNodes)
 		nodes.resize(i + 1);
 		for (int j = 0; j < xNodes; j++)
 		{
-			nodes[i].push_back(new Node());
+			nodes[i].push_back(new Node(j,i));
 		}
 	}
 }
@@ -45,9 +45,35 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 	nodes[startX][startY]->setStartNode(true);
 	nodes[endX][endY]->setEndNode(true);
 
-	/*add the parent and child nodes to an open list if they are safe
-	and set there parent node*/
-	checkNodes(startX, startY);
+	/*initialise the current node index*/
+	currentX = startX;
+	currentY = startY;
+
+	/*initialise the check*/
+	bool reachedEnd = false;
+	
+	/*loop until the end has been reached*/
+	while (!reachedEnd)
+	{
+		/*add the parent and child nodes to an open list if they are safe
+		and set there parent node and cost*/
+		checkNodes(currentX, currentY);
+
+		/*work out the heuristic using the Manhattan method
+		(total number of squares moved horizontally and vertically to end)*/
+		int h = abs(endY - currentY) + abs(endX - currentX);
+
+		/*find the next node*/
+		findNextNode(h);
+
+		/*check if the end has been reached*/
+		if (currentX == endX && currentY == endY)
+		{
+			/*leave the loop*/
+			reachedEnd = true;
+		}
+	}
+
 }
 
 /**************************************************************************************************************/
@@ -55,66 +81,112 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 /*checks the surrounding nodes*/
 void AStar::checkNodes(int parentX, int parentY)
 {
-	/*add the start node to the open list*/
-	openList.push_back(nodes[parentX][parentY]);
+/*top left*/
+if (nodes[parentX - 1][parentY - 1]->getSafeNode())
+{
+	openList.push_back(nodes[parentX - 1][parentY - 1]);
+	nodes[parentX - 1][parentY - 1]->setParentIndex(parentX, parentY);
+	/*set the cost to the cost of the parent node plus 14*/
+	nodes[parentX - 1][parentY - 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
+}
 
-	/*top left*/
-	if (nodes[parentX - 1][parentY - 1]->getSafeNode())
+/*top middle*/
+if (nodes[parentX][parentY - 1]->getSafeNode())
+{
+	openList.push_back(nodes[parentX][parentY - 1]);
+	nodes[parentX][parentY - 1]->setParentIndex(parentX, parentY);
+	/*set the cost to the cost of the parent node plus 10*/
+	nodes[parentX][parentY - 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
+}
+
+/*top right*/
+if (nodes[parentX + 1][parentY - 1]->getSafeNode())
+{
+	openList.push_back(nodes[parentX + 1][parentY - 1]);
+	nodes[parentX + 1][parentY - 1]->setParentIndex(parentX, parentY);
+	/*set the cost to the cost of the parent node plus 14*/
+	nodes[parentX + 1][parentY - 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
+}
+
+/*middle left*/
+if (nodes[parentX - 1][parentY]->getSafeNode())
+{
+	openList.push_back(nodes[parentX - 1][parentY]);
+	nodes[parentX - 1][parentY]->setParentIndex(parentX, parentY);
+	/*set the cost to the cost of the parent node plus 10*/
+	nodes[parentX - 1][parentY]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
+}
+
+/*middle right*/
+if (nodes[parentX + 1][parentY]->getSafeNode())
+{
+	openList.push_back(nodes[parentX + 1][parentY]);
+	nodes[parentX + 1][parentY]->setParentIndex(parentX, parentY);
+	/*set the cost to the cost of the parent node plus 10*/
+	nodes[parentX + 1][parentY]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
+}
+
+/*bottom left*/
+if (nodes[parentX - 1][parentY + 1]->getSafeNode())
+{
+	openList.push_back(nodes[parentX - 1][parentY + 1]);
+	nodes[parentX - 1][parentY + 1]->setParentIndex(parentX, parentY);
+	/*set the cost to the cost of the parent node plus 14*/
+	nodes[parentX - 1][parentY + 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
+}
+
+/*bottom middle*/
+if (nodes[parentX][parentY + 1]->getSafeNode())
+{
+	openList.push_back(nodes[parentX][parentY + 1]);
+	nodes[parentX][parentY + 1]->setParentIndex(parentX, parentY);
+	/*set the cost to the cost of the parent node plus 10*/
+	nodes[parentX][parentY + 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
+}
+
+/*bottom right*/
+if (nodes[parentX + 1][parentY + 1]->getSafeNode())
+{
+	openList.push_back(nodes[parentX + 1][parentY + 1]);
+	nodes[parentX + 1][parentY + 1]->setParentIndex(parentX, parentY);
+	/*set the cost to the cost of the parent node plus 14*/
+	nodes[parentX + 1][parentY + 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
+}
+
+/*move the initial node to the closed list*/
+closedList.push_back(nodes[parentX][parentY]);
+}
+
+
+/**************************************************************************************************************/
+
+/*finds the next node*/
+void AStar::findNextNode(int h)
+{
+	/*loop through the open list of nodes*/
+	for (unsigned int i = 0; i < openList.size(); i++)
 	{
-		openList.push_back(nodes[parentX - 1][parentY - 1]);
-		nodes[parentX - 1][parentY - 1]->setParentIndex(parentX, parentY);
+		/*set the fScore of the node*/
+		openList[i]->setFScoreNode(h + openList[i]->getCostNode());
 	}
 
-	/*top middle*/
-	if (nodes[parentX][parentY - 1]->getSafeNode())
+	/*the current closest node index*/
+	int current = 0;
+
+	/*loop through the open list of nodes*/
+	for (unsigned int i = 1; i < openList.size(); i++)
 	{
-		openList.push_back(nodes[parentX][parentY - 1]);
-		nodes[parentX][parentY - 1]->setParentIndex(parentX, parentY);
+		/*if the current fScore is lower set the current to the current index*/
+		if (openList[current]->getFScoreNode() > openList[i]->getFScoreNode())
+		{
+			current = i;
+		}
 	}
 
-	/*top right*/
-	if (nodes[parentX + 1][parentY - 1]->getSafeNode())
-	{
-		openList.push_back(nodes[parentX + 1][parentY - 1]);
-		nodes[parentX + 1][parentY - 1]->setParentIndex(parentX, parentY);
-	}
+	/*set the current x and y*/
+	currentX = openList[current]->getXIndex();
+	currentY = openList[current]->getYIndex();
 
-	/*middle left*/
-	if (nodes[parentX - 1][parentY]->getSafeNode())
-	{
-		openList.push_back(nodes[parentX - 1][parentY]);
-		nodes[parentX - 1][parentY]->setParentIndex(parentX, parentY);
-	}
-
-	/*middle right*/
-	if (nodes[parentX + 1][parentY]->getSafeNode())
-	{
-		openList.push_back(nodes[parentX + 1][parentY]);
-		nodes[parentX + 1][parentY]->setParentIndex(parentX, parentY);
-	}
-
-	/*bottom left*/
-	if (nodes[parentX - 1][parentY + 1]->getSafeNode())
-	{
-		openList.push_back(nodes[parentX - 1][parentY + 1]);
-		nodes[parentX - 1][parentY + 1]->setParentIndex(parentX, parentY);
-	}
-
-	/*bottom middle*/
-	if (nodes[parentX][parentY + 1]->getSafeNode())
-	{
-		openList.push_back(nodes[parentX][parentY + 1]);
-		nodes[parentX][parentY + 1]->setParentIndex(parentX, parentY);
-	}
-
-	/*bottom right*/
-	if (nodes[parentX + 1][parentY + 1]->getSafeNode())
-	{
-		openList.push_back(nodes[parentX + 1][parentY + 1]);
-		nodes[parentX + 1][parentY + 1]->setParentIndex(parentX, parentY);
-	}
-
-	/*move the initial node to the closed list*/
-	closedList.push_back(openList[openList.size() - 9]);
-	openList.erase(openList.begin() + (openList.size() - 9));
+	/*remove the node from the open list*/
+	openList.erase(openList.begin() + current);
 }
