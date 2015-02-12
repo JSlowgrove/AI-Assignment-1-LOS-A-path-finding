@@ -25,7 +25,31 @@ void BotB::botALineOfSight(Player* player, BotA* bot, Map* map)
 		&& !LOS::lineOfSight(position + Vec2(width * 0.5f, height * 0.5f),
 		player->getPosition() + Vec2(player->getWidth() * 0.5f, player->getHeight() * 0.5f), map))
 	{
-		/*tmp movement*/
-		velocities = { -100.0f, -100.0f };
+		/*move towards botA*/
+
+		/*if the bot is to the left*/
+		if (bot->getPosition().x < position.x)
+		{
+			/*set the velocity to go left*/
+			velocities.x = -100.0f;
+		}
+		/*if the bot is to the right*/
+		if (bot->getPosition().x >= position.x)
+		{
+			/*set the velocity to go left*/
+			velocities.x = 100.0f;
+		}
+		/*if the bot is above*/
+		if (bot->getPosition().y < position.y)
+		{
+			/*set the velocity to go up*/
+			velocities.y = -100.0f;
+		}
+		/*if the bot is bellow*/
+		if (bot->getPosition().y >= position.y)
+		{
+			/*set the velocity to go down*/
+			velocities.y = 100.0f;
+		}
 	}
 }
