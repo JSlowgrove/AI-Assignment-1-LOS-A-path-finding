@@ -93,4 +93,11 @@ public:
 	@param float The delta time
 	*/
 	void collisionUpdate(Map *, float);
+
+	/**
+	Tests if the Creature collides with an Entity and performs an act upon the result
+	@param Map * A pointer to the Entity
+	@param float The delta time
+	*/
+	void collisionUpdate(Entity *, float);
 };

@@ -33,5 +33,10 @@ public:
 	*/
 	~BotAI();
 
+	/*
+	Test if the player is in sight
+	@param Player * A pointer to the player
+	@param Map * A pointer to the map
+	*/
 	void playerLineOfSight(Player*, Map*);
 };

@@ -233,3 +233,18 @@ float Creature::collision(Map* map, float dt, float velocity, float currentPos, 
 	/*return the resultant velocity*/
 	return velocity;
 }
+
+/**************************************************************************************************************/
+
+/*tests if the Creature collides with an Entity and performs an act upon the result*/
+void Creature::collisionUpdate(Entity* entity, float dt)
+{
+	/*check for collisions*/
+	if (entity->getPosition().y + entity->getHeight() >= position.y + (velocities.y * dt)
+		&& entity->getPosition().y <= position.y + (velocities.y * dt) + height
+		&& entity->getPosition().x + entity->getWidth() >= position.x + (velocities.x * dt)
+		&& entity->getPosition().x <= position.x + (velocities.x * dt) + width)
+	{
+		velocities = { 0.0f, 0.0f };
+	}
+}

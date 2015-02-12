@@ -129,6 +129,14 @@ void Game::update(float dt)
 	botA->collisionUpdate(map, dt);
 	botB->collisionUpdate(map, dt);
 
+	/*update creature collisions*/
+	botA->collisionUpdate(botB, dt);
+	botA->collisionUpdate(player, dt);
+	botB->collisionUpdate(botA, dt);
+	botB->collisionUpdate(player, dt);
+	player->collisionUpdate(botA, dt);
+	player->collisionUpdate(botB, dt);
+
 	/*update the player*/
 	player->updatePosition(dt);
 

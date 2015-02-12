@@ -81,6 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="aStar.h" />
     <ClInclude Include="audio.h" />
     <ClInclude Include="botA.h" />
     <ClInclude Include="botAI.h" />
@@ -98,6 +99,7 @@
     <ClInclude Include="wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="aStar.cpp" />
     <ClCompile Include="audio.cpp" />
     <ClCompile Include="botA.cpp" />
     <ClCompile Include="botAI.cpp" />
