@@ -54,25 +54,29 @@ bool LOS::lineOfSight(Vec2 a, Vec2 b, Map* map)
 			C---------D
 			*/
 			/*AB test*/
-			if (lineLineIntersectionCheck(a, b, Vec2(j * 32, i * 32), Vec2((j + 1) * 32, i * 32), 'x'))
+			if (lineLineIntersectionCheck(a, b, Vec2((float)(j * 32), (float)(i * 32)), 
+											Vec2((float)(j + 1) * 32, (float)(i * 32)), 'x'))
 			{
 				/*collision*/
 				collision = true;
 			}
 			/*AC test*/
-			if (lineLineIntersectionCheck(a, b, Vec2(j * 32, i * 32), Vec2(j * 32, (i + 1) * 32), 'y'))
+			if (lineLineIntersectionCheck(a, b, Vec2((float)(j * 32), (float)(i * 32)), 
+											Vec2((float)(j * 32), (float)(i + 1) * 32), 'y'))
 			{
 				/*collision*/
 				collision = true;
 			}
 			/*CD test*/
-			if (lineLineIntersectionCheck(a, b, Vec2(j * 32, (i + 1) * 32), Vec2((j + 1) * 32, (i + 1) * 32), 'x'))
+			if (lineLineIntersectionCheck(a, b, Vec2((float)(j * 32), (float)(i + 1) * 32), 
+											Vec2((float)(j + 1) * 32, (float)(i + 1) * 32), 'x'))
 			{
 				/*collision*/
 				collision = true;
 			}
 			/*BD test*/
-			if (lineLineIntersectionCheck(a, b, Vec2((j + 1) * 32, (i + 1) * 32), Vec2((j + 1) * 32, (i + 1) * 32), 'y'))
+			if (lineLineIntersectionCheck(a, b, Vec2((float)(j + 1) * 32, (float)(i + 1) * 32), 
+											Vec2((float)(j + 1) * 32, (float)(i + 1) * 32), 'y'))
 			{
 				/*collision*/
 				collision = true;
@@ -204,25 +208,29 @@ void LOS::drawLineOfSight(Vec2 a, Vec2 b, Map* map, SDL_Renderer* renderer)
 			C---------D
 			*/
 			/*AB test*/
-			if (lineLineIntersectionCheck(a, b, Vec2(j * 32, i * 32), Vec2((j + 1) * 32, i * 32), 'x'))
+			if (lineLineIntersectionCheck(a, b, Vec2((float)(j * 32), (float)(i * 32)), 
+											Vec2((float)(j + 1) * 32, (float)(i * 32)), 'x'))
 			{
 				/*collision*/
 				collision = true;
 			}
 			/*AC test*/
-			if (lineLineIntersectionCheck(a, b, Vec2(j * 32, i * 32), Vec2(j * 32, (i + 1) * 32), 'y'))
+			if (lineLineIntersectionCheck(a, b, Vec2((float)(j * 32), (float)(i * 32)), 
+											Vec2((float)(j * 32), (float)(i + 1) * 32), 'y'))
 			{
 				/*collision*/
 				collision = true;
 			}
 			/*CD test*/
-			if (lineLineIntersectionCheck(a, b, Vec2(j * 32, (i + 1) * 32), Vec2((j + 1) * 32, (i + 1) * 32), 'x'))
+			if (lineLineIntersectionCheck(a, b, Vec2((float)(j * 32), (float)(i + 1) * 32), 
+											Vec2((float)(j + 1) * 32, (float)(i + 1) * 32), 'x'))
 			{
 				/*collision*/
 				collision = true;
 			}
 			/*BD test*/
-			if (lineLineIntersectionCheck(a, b, Vec2((j + 1) * 32, (i + 1) * 32), Vec2((j + 1) * 32, (i + 1) * 32), 'y'))
+			if (lineLineIntersectionCheck(a, b, Vec2((float)(j + 1) * 32, (float)(i + 1) * 32), 
+											Vec2((float)(j + 1) * 32, (float)(i + 1) * 32), 'y'))
 			{
 				/*collision*/
 				collision = true;
