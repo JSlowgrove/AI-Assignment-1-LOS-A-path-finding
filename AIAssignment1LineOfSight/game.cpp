@@ -176,24 +176,24 @@ void Game::draw()
 
 		/*draw a line between the player and bot a*/
 		SDL_RenderDrawLine(renderer,
-			(int)botA->getPosition().x + (botA->getWidth()*0.5f),
-			(int)botA->getPosition().y + (botA->getHeight()*0.5f),
-			(int)player->getPosition().x + (player->getWidth()*0.5f),
-			(int)player->getPosition().y + (player->getHeight()*0.5f));
+			(int)botA->getPosition().x + (int)(botA->getWidth()*0.5f),
+			(int)botA->getPosition().y + (int)(botA->getHeight()*0.5f),
+			(int)player->getPosition().x + (int)(player->getWidth()*0.5f),
+			(int)player->getPosition().y + (int)(player->getHeight()*0.5f));
 
 		/*draw a line between the player and bot b*/
 		SDL_RenderDrawLine(renderer,
-			(int)botB->getPosition().x + (botB->getWidth()*0.5f),
-			(int)botB->getPosition().y + (botB->getHeight()*0.5f),
-			(int)player->getPosition().x + (player->getWidth()*0.5f),
-			(int)player->getPosition().y + (player->getHeight()*0.5f));
+			(int)botB->getPosition().x + (int)(botB->getWidth()*0.5f),
+			(int)botB->getPosition().y + (int)(botB->getHeight()*0.5f),
+			(int)player->getPosition().x + (int)(player->getWidth()*0.5f),
+			(int)player->getPosition().y + (int)(player->getHeight()*0.5f));
 
 		/*draw a line between the player and bot a*/
 		SDL_RenderDrawLine(renderer,
-			(int)botA->getPosition().x + (botA->getWidth()*0.5f),
-			(int)botA->getPosition().y + (botA->getHeight()*0.5f),
-			(int)botB->getPosition().x + (botB->getWidth()*0.5f),
-			(int)botB->getPosition().y + (botB->getHeight()*0.5f));
+			(int)botA->getPosition().x + (int)(botA->getWidth()*0.5f),
+			(int)botA->getPosition().y + (int)(botA->getHeight()*0.5f),
+			(int)botB->getPosition().x + (int)(botB->getWidth()*0.5f),
+			(int)botB->getPosition().y + (int)(botB->getHeight()*0.5f));
 
 		/*draw the line of sight calculations*/
 		LOS::drawLineOfSight(botA->getPosition() + Vec2(botA->getWidth()*0.5f, botA->getHeight()*0.5f),
