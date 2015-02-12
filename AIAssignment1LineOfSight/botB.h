@@ -4,6 +4,7 @@
 #include "texture.h"
 #include "vec2.h"
 #include "botAI.h"
+#include "botA.h"
 
 /**
 @brief Creates a BotB object that inherits BotAI.
@@ -26,4 +27,13 @@ public:
 	Destructs an BotA object
 	*/
 	~BotB();
+
+	/*
+	Test if BotA is in sight
+	@param Player * A pointer to the Player
+	@param BotA * A pointer to BotA
+	@param Map * A pointer to the Map
+	*/
+	void botALineOfSight(Player*, BotA*, Map*);
+
 };

@@ -125,6 +125,9 @@ void Game::update(float dt)
 	botA->playerLineOfSight(player, map);
 	botB->playerLineOfSight(player, map);
 
+	/*test the botB line of sight*/
+	botB->botALineOfSight(player, botA, map);
+
 	/*update the bot collisions*/
 	botA->collisionUpdate(map, dt);
 	botB->collisionUpdate(map, dt);
@@ -178,11 +181,27 @@ void Game::draw()
 			(int)player->getPosition().x + (player->getWidth()*0.5f),
 			(int)player->getPosition().y + (player->getHeight()*0.5f));
 
+		/*draw a line between the player and bot b*/
+		SDL_RenderDrawLine(renderer,
+			(int)botB->getPosition().x + (botB->getWidth()*0.5f),
+			(int)botB->getPosition().y + (botB->getHeight()*0.5f),
+			(int)player->getPosition().x + (player->getWidth()*0.5f),
+			(int)player->getPosition().y + (player->getHeight()*0.5f));
+
+		/*draw a line between the player and bot a*/
+		SDL_RenderDrawLine(renderer,
+			(int)botA->getPosition().x + (botA->getWidth()*0.5f),
+			(int)botA->getPosition().y + (botA->getHeight()*0.5f),
+			(int)botB->getPosition().x + (botB->getWidth()*0.5f),
+			(int)botB->getPosition().y + (botB->getHeight()*0.5f));
+
 		/*draw the line of sight calculations*/
 		LOS::drawLineOfSight(botA->getPosition() + Vec2(botA->getWidth()*0.5f, botA->getHeight()*0.5f),
 			player->getPosition() + Vec2(player->getWidth()*0.5f, player->getHeight()*0.5f), map, renderer);
 		LOS::drawLineOfSight(botB->getPosition() + Vec2(botB->getWidth()*0.5f, botB->getHeight()*0.5f),
 			player->getPosition() + Vec2(player->getWidth()*0.5f, player->getHeight()*0.5f), map, renderer);
+		LOS::drawLineOfSight(botA->getPosition() + Vec2(botA->getWidth()*0.5f, botA->getHeight()*0.5f),
+			botB->getPosition() + Vec2(botB->getWidth()*0.5f, botB->getHeight()*0.5f), map, renderer);
 
 		/*draw the intersection tiles with the creatures*/
 		player->displayTiles(renderer, map);
