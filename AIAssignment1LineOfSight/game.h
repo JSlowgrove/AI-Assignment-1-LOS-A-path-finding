@@ -11,6 +11,7 @@
 #include "botA.h"
 #include "botB.h"
 #include "lineOfSight.h"
+#include "aStar.h"
 
 /**
 @brief Creates a Game object that inherits State
@@ -27,6 +28,7 @@ private:
 	Player* player;
 	BotA* botA;
 	BotB* botB;
+	AStar* aStar;
 	/*developer mode*/
 	bool developer;
 public:

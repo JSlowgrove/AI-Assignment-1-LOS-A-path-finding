@@ -2,9 +2,11 @@
 
 #include <vector>
 #include "node.h"
+#include "SDL.h"
 
 /**
 @brief Creates an object for A* path finding
+Made using help from http://www.policyalmanac.org/games/aStarTutorial.htm
 */
 class AStar
 {
@@ -19,6 +21,8 @@ private:
 	/**The current node index*/
 	int currentX;
 	int currentY;
+	/*a pointer to the renderer*/
+	SDL_Renderer* renderer;
 
 	/**
 	Check the surrounding nodes
@@ -38,8 +42,9 @@ public:
 	Constructs an AStar object
 	@param int The number of nodes in a row
 	@param int The number of rows in the map
+	@param SDL_Renderer* A pointer to the renderer
 	*/
-	AStar(int xNodes, int yNodes);
+	AStar(int xNodes, int yNodes, SDL_Renderer* renderer);
 
 	/**
 	Destructs an AStar object

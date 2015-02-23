@@ -1,5 +1,6 @@
 #pragma once
 
+#include <time.h>
 #include "vec2.h"
 #include "SDL.h"
 #include "map.h"
@@ -34,4 +35,12 @@ namespace LOS
 	@param SDL_Renderer * A pointer to the renderer
 	*/
 	void drawLineOfSight(Vec2 a, Vec2 b, Map* map, SDL_Renderer* renderer);
+
+	/**
+	Find a new target position to go to
+	@param Vec2 Position a
+	@param Map * A pointer to the map
+	@return Vec2 The new target position
+	*/
+	Vec2 getNewTarget(Vec2 a, Map* map);
 }

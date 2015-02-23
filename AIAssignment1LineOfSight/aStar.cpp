@@ -3,19 +3,20 @@
 /**************************************************************************************************************/
 
 /*Constructs the A* object*/
-AStar::AStar(int xNodes, int yNodes)
+AStar::AStar(int xNodes, int yNodes, SDL_Renderer* renderer)
 {
 	/*initialise variables*/
 	this->xNodes = xNodes;
 	this->yNodes = yNodes;
+	this->renderer = renderer;
 
 	/*initialise arrays*/
-	for (int i = 0; i < yNodes; i++)
+	for (int i = 0; i < xNodes; i++)
 	{
 		nodes.resize(i + 1);
-		for (int j = 0; j < xNodes; j++)
+		for (int j = 0; j < yNodes; j++)
 		{
-			nodes[i].push_back(new Node(j,i));
+			nodes[i].push_back(new Node(i,j));
 		}
 	}
 }
@@ -81,80 +82,183 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 /*checks the surrounding nodes*/
 void AStar::checkNodes(int parentX, int parentY)
 {
+
+/*creates a rectangle*/
+SDL_Rect box;
+
 /*top left*/
-if (nodes[parentX - 1][parentY - 1]->getSafeNode())
+if (nodes[parentX - 1][parentY - 1]->getSafeNode() && parentX != 0 && parentY !=0)
 {
 	openList.push_back(nodes[parentX - 1][parentY - 1]);
 	nodes[parentX - 1][parentY - 1]->setParentIndex(parentX, parentY);
 	/*set the cost to the cost of the parent node plus 14*/
 	nodes[parentX - 1][parentY - 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
+	
+	/*set the draw colour to white*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+	/*update the box for the test area*/
+	box.x = (parentX - 1) * 32;
+	box.y = (parentY - 1) * 32;
+	box.w = box.h = 32;
+
+	/*draw the test area outline*/
+	SDL_RenderDrawRect(renderer, &box);
 }
 
 /*top middle*/
-if (nodes[parentX][parentY - 1]->getSafeNode())
+if (nodes[parentX][parentY - 1]->getSafeNode() && parentX != 0 && parentY != 0)
 {
 	openList.push_back(nodes[parentX][parentY - 1]);
 	nodes[parentX][parentY - 1]->setParentIndex(parentX, parentY);
 	/*set the cost to the cost of the parent node plus 10*/
 	nodes[parentX][parentY - 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
+
+	/*set the draw colour to white*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+	/*update the box for the test area*/
+	box.x = (parentX) * 32;
+	box.y = (parentY - 1) * 32;
+	box.w = box.h = 32;
+
+	/*draw the test area outline*/
+	SDL_RenderDrawRect(renderer, &box);
 }
 
 /*top right*/
-if (nodes[parentX + 1][parentY - 1]->getSafeNode())
+if (nodes[parentX + 1][parentY - 1]->getSafeNode() && parentX != 0 && parentY != 0)
 {
 	openList.push_back(nodes[parentX + 1][parentY - 1]);
 	nodes[parentX + 1][parentY - 1]->setParentIndex(parentX, parentY);
 	/*set the cost to the cost of the parent node plus 14*/
 	nodes[parentX + 1][parentY - 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
+
+	/*set the draw colour to white*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+	/*update the box for the test area*/
+	box.x = (parentX + 1) * 32;
+	box.y = (parentY - 1) * 32;
+	box.w = box.h = 32;
+
+	/*draw the test area outline*/
+	SDL_RenderDrawRect(renderer, &box);
 }
 
 /*middle left*/
-if (nodes[parentX - 1][parentY]->getSafeNode())
+if (nodes[parentX - 1][parentY]->getSafeNode() && parentX != 0 && parentY != 0)
 {
 	openList.push_back(nodes[parentX - 1][parentY]);
 	nodes[parentX - 1][parentY]->setParentIndex(parentX, parentY);
 	/*set the cost to the cost of the parent node plus 10*/
 	nodes[parentX - 1][parentY]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
+
+	/*set the draw colour to white*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+	/*update the box for the test area*/
+	box.x = (parentX - 1) * 32;
+	box.y = (parentY) * 32;
+	box.w = box.h = 32;
+
+	/*draw the test area outline*/
+	SDL_RenderDrawRect(renderer, &box);
 }
 
 /*middle right*/
-if (nodes[parentX + 1][parentY]->getSafeNode())
+if (nodes[parentX + 1][parentY]->getSafeNode() && parentX != 0 && parentY != 0)
 {
 	openList.push_back(nodes[parentX + 1][parentY]);
 	nodes[parentX + 1][parentY]->setParentIndex(parentX, parentY);
 	/*set the cost to the cost of the parent node plus 10*/
 	nodes[parentX + 1][parentY]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
+
+	/*set the draw colour to white*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+	/*update the box for the test area*/
+	box.x = (parentX + 1) * 32;
+	box.y = (parentY) * 32;
+	box.w = box.h = 32;
+
+	/*draw the test area outline*/
+	SDL_RenderDrawRect(renderer, &box);
 }
 
 /*bottom left*/
-if (nodes[parentX - 1][parentY + 1]->getSafeNode())
+if (nodes[parentX - 1][parentY + 1]->getSafeNode() && parentX != 0 && parentY != 0)
 {
 	openList.push_back(nodes[parentX - 1][parentY + 1]);
 	nodes[parentX - 1][parentY + 1]->setParentIndex(parentX, parentY);
 	/*set the cost to the cost of the parent node plus 14*/
 	nodes[parentX - 1][parentY + 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
+
+	/*set the draw colour to white*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+	/*update the box for the test area*/
+	box.x = (parentX - 1) * 32;
+	box.y = (parentY + 1) * 32;
+	box.w = box.h = 32;
+
+	/*draw the test area outline*/
+	SDL_RenderDrawRect(renderer, &box);
 }
 
 /*bottom middle*/
-if (nodes[parentX][parentY + 1]->getSafeNode())
+if (nodes[parentX][parentY + 1]->getSafeNode() && parentX != 0 && parentY != 0)
 {
 	openList.push_back(nodes[parentX][parentY + 1]);
 	nodes[parentX][parentY + 1]->setParentIndex(parentX, parentY);
 	/*set the cost to the cost of the parent node plus 10*/
 	nodes[parentX][parentY + 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
+
+	/*set the draw colour to white*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+	/*update the box for the test area*/
+	box.x = (parentX) * 32;
+	box.y = (parentY + 1) * 32;
+	box.w = box.h = 32;
+
+	/*draw the test area outline*/
+	SDL_RenderDrawRect(renderer, &box);
 }
 
 /*bottom right*/
-if (nodes[parentX + 1][parentY + 1]->getSafeNode())
+if (nodes[parentX + 1][parentY + 1]->getSafeNode() && parentX != 0 && parentY != 0)
 {
 	openList.push_back(nodes[parentX + 1][parentY + 1]);
 	nodes[parentX + 1][parentY + 1]->setParentIndex(parentX, parentY);
 	/*set the cost to the cost of the parent node plus 14*/
 	nodes[parentX + 1][parentY + 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
+
+	/*set the draw colour to white*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+	/*update the box for the test area*/
+	box.x = (parentX + 1) * 32;
+	box.y = (parentY + 1) * 32;
+	box.w = box.h = 32;
+
+	/*draw the test area outline*/
+	SDL_RenderDrawRect(renderer, &box);
 }
 
 /*move the initial node to the closed list*/
 closedList.push_back(nodes[parentX][parentY]);
+
+/*set the draw colour to red*/
+SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
+
+/*update the box for the test area*/
+box.x = (parentX) * 32;
+box.y = (parentY) * 32;
+box.w = box.h = 32;
+
+/*draw the test area outline*/
+SDL_RenderFillRect(renderer, &box);
 }
 
 

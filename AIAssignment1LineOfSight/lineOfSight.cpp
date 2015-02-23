@@ -274,3 +274,54 @@ void LOS::drawLineOfSight(Vec2 a, Vec2 b, Map* map, SDL_Renderer* renderer)
 	/*draw the test area outline*/
 	SDL_RenderDrawRect(renderer, &box);
 }
+
+/**************************************************************************************************************/
+
+/*find a new target position to go to*/
+Vec2 LOS::getNewTarget(Vec2 a, Map* map)
+{
+	/*initialise random seed*/
+	srand((unsigned int)time(NULL));
+
+	/*initialise variables*/
+	Vec2 b = { 0.0f, 0.0f };
+	bool wall = false;
+	bool generated = false;
+
+	/*loop until a new position has been generated that is out of sight of the player*/
+	while (!generated)
+	{
+		/*initialise the target vector with a random new position*/
+		b = { (float)(rand() % 20) * 32, (float)(rand() % 15) * 32 };
+
+		/*wall check*/
+		wall = false;
+		if (map->getMapPositionType((int)(b.x/32), (int)(b.y/32)) == 'w')
+		{
+			wall = true;
+		}
+
+		/*loop while the generated position is a wall*/
+		while (wall)
+		{
+			/*generate a random new position*/
+			b = { (float)(rand() % 20) * 32, (float)(rand() % 15) * 32 };
+
+			/*wall check*/
+			wall = false;
+			if (map->getMapPositionType((int)(b.x / 32), (int)(b.y / 32)) == 'w')
+			{
+				wall = true;
+			}
+		}
+		/*check if position is not able to be seen by the player*/
+		if (!lineOfSight(a + Vec2(16.0f, 16.0f), b + Vec2(16.0f, 16.0f), map))
+		{
+			/*the position is generated*/
+			generated = true;
+		}
+	}
+
+	/*return the new position*/
+	return b;
+}

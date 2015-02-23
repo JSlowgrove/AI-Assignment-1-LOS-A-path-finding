@@ -15,6 +15,7 @@ Game::Game(StateManager* inStateManager, SDL_Renderer* inRenderer, int inWidth, 
 	player = new Player(spritesheet, map->getInitialPlayer(), 30, 30);
 	botA = new BotA(spritesheet, map->getInitialBotA(), 30, 30);
 	botB = new BotB(spritesheet, map->getInitialBotB(), 30, 30);
+	aStar = new AStar(map->getNumberOfXObjects(), map->getNumberOfYObjects(), renderer);
 
 	/*initialise developer mode to off*/
 	developer = false;
@@ -122,11 +123,11 @@ void Game::update(float dt)
 	player->collisionUpdate(map, dt);
 
 	/*test the bots for player line of sight*/
-	botA->playerLineOfSight(player, map);
+	/*botA->playerLineOfSight(player, map);
 	botB->playerLineOfSight(player, map);
 
-	/*test the botB line of sight*/
-	botB->botALineOfSight(player, botA, map);
+	/ *test the botB line of sight* /
+	botB->botALineOfSight(player, botA, map);*/
 
 	/*update the bot collisions*/
 	botA->collisionUpdate(map, dt);
@@ -213,6 +214,11 @@ void Game::draw()
 	player->display(renderer);
 	botA->display(renderer);
 	botB->display(renderer);
+
+
+	Vec2 moveTarget = LOS::getNewTarget(player->getPosition(), map);
+	/*aStar->findNewPath((int)(botA->getPosition().x / 32), (int)(botA->getPosition().y / 32),
+	(int)(moveTarget.x), (int)(moveTarget.y));*/
 
 	/*display renderer*/
 	SDL_RenderPresent(renderer);
