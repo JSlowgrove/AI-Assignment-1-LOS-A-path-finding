@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <vector>
 #include "node.h"
 #include "SDL.h"
@@ -13,16 +14,17 @@ class AStar
 private:
 	/**The arrays of Nodes*/
 	std::vector<std::vector<Node*>> nodes;
-	std::vector<Node*> openList;
-	std::vector<Node*> closedList;
+	std::vector<Node> openList;
+	std::vector<Node> closedList;
 	/**The number of nodes*/
 	int xNodes;
 	int yNodes;
 	/**The current node index*/
 	int currentX;
 	int currentY;
-	/*a pointer to the renderer*/
-	SDL_Renderer* renderer;
+	/**The end node index*/
+	int endX;
+	int endY;
 
 	/**
 	Check the surrounding nodes
@@ -32,24 +34,34 @@ private:
 	void checkNodes(int parentX, int parentY);
 
 	/**
-	Find the next node
-	@param int The value of the heuristic
+	Test the node for the open list setup
+	@param int The parent x index value
+	@param int The parent y index value
+	@param int The test x index value
+	@param int The test y index value
+	@param int The cost to add to the node
 	*/
-	void findNextNode(int h);
+	void nodeTest(int parentX, int parentY, int testX, int testY, int cost);
+
+	/**
+	Find the next node
+	*/
+	void findNextNode();
 
 public:
 	/**
 	Constructs an AStar object
 	@param int The number of nodes in a row
 	@param int The number of rows in the map
-	@param SDL_Renderer* A pointer to the renderer
 	*/
-	AStar(int xNodes, int yNodes, SDL_Renderer* renderer);
+	AStar(int xNodes, int yNodes);
 
 	/**
 	Destructs an AStar object
 	*/
 	~AStar();
+
+	void setDangerNode(int nodeXIndex, int nodeYIndex);
 
 	/**
 	Finds a new path to follow
@@ -59,4 +71,10 @@ public:
 	@param int The end y index value
 	*/
 	void findNewPath(int startX, int startY, int endX, int endY);
+
+	/**
+	Displays the open and closed lists
+	@param SDL_Renderer* A pointer to the renderer
+	*/
+	void drawLists(SDL_Renderer* renderer);
 };

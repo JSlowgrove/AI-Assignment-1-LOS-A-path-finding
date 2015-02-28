@@ -3,20 +3,20 @@
 /**************************************************************************************************************/
 
 /*Constructs the A* object*/
-AStar::AStar(int xNodes, int yNodes, SDL_Renderer* renderer)
+AStar::AStar(int xNodes, int yNodes)
 {
 	/*initialise variables*/
 	this->xNodes = xNodes;
 	this->yNodes = yNodes;
-	this->renderer = renderer;
 
 	/*initialise arrays*/
-	for (int i = 0; i < xNodes; i++)
+	for (int x = 0; x < xNodes; x++)
 	{
-		nodes.resize(i + 1);
-		for (int j = 0; j < yNodes; j++)
+		nodes.resize(x + 1);
+		for (int y = 0; y < yNodes; y++)
 		{
-			nodes[i].push_back(new Node(i,j));
+			/*add a new node [x][y]*/
+			nodes[x].push_back(new Node(x,y));
 		}
 	}
 }
@@ -28,13 +28,22 @@ AStar::AStar(int xNodes, int yNodes, SDL_Renderer* renderer)
 AStar::~AStar()
 {
 	/*delete pointers*/
-	for (int i = 0; i < yNodes; i++)
+	for (int x = 0; x < xNodes; x++)
 	{
-		for (int j = 0; j < xNodes; j++)
+		for (int y = 0; y < yNodes; y++)
 		{
-			delete nodes[i][j];
+			delete nodes[x][y];
 		}
 	}
+}
+
+/**************************************************************************************************************/
+
+/*Sets the node to not be safe*/
+void AStar::setDangerNode(int nodeXIndex, int nodeYIndex)
+{
+	/*set the node to not be safe*/
+	nodes[nodeXIndex][nodeYIndex]->setSafeNode(false);
 }
 
 /**************************************************************************************************************/
@@ -42,17 +51,34 @@ AStar::~AStar()
 /*finds a new path to follow*/
 void AStar::findNewPath(int startX, int startY, int endX, int endY)
 {
+	/*reset listed information*/
+	for (int x = 0; x < xNodes; x++)
+	{
+		for (int y = 0; y < yNodes; y++)
+		{
+			nodes[x][y]->setListed(false);
+		}
+	}
+
 	/*initialise start and end nodes*/
 	nodes[startX][startY]->setStartNode(true);
 	nodes[endX][endY]->setEndNode(true);
 
-	/*initialise the current node index*/
+	/*push back the start node to the closed list*/
+	//closedList.push_back(*nodes[startX][startY]);
+
+	/*initialise the current and end node index*/
 	currentX = startX;
 	currentY = startY;
+	this->endX = endX;
+	this->endY = endY;
 
 	/*initialise the check*/
 	bool reachedEnd = false;
 	
+	/*the number of loops*/
+	int loopIndex = 0;
+
 	/*loop until the end has been reached*/
 	while (!reachedEnd)
 	{
@@ -60,21 +86,28 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 		and set there parent node and cost*/
 		checkNodes(currentX, currentY);
 
-		/*work out the heuristic using the Manhattan method
-		(total number of squares moved horizontally and vertically to end)*/
-		int h = abs(endY - currentY) + abs(endX - currentX);
-
-		/*find the next node*/
-		findNextNode(h);
-
 		/*check if the end has been reached*/
-		if (currentX == endX && currentY == endY)
+		if (nodes[currentX][currentY]->getEndNode())
 		{
 			/*leave the loop*/
 			reachedEnd = true;
+			std::cout << "path found" << std::endl;
 		}
-	}
 
+		/*find the next node*/
+		findNextNode();
+
+		/*if too many loops give up looking for a path*/
+		if (loopIndex > 1300)
+		{
+			/*leave the loop*/
+			reachedEnd = true;
+			std::cout << "too many loops, give up on a* test" << std::endl;
+		}
+
+		/*increase loop index*/
+		loopIndex++;
+	}
 }
 
 /**************************************************************************************************************/
@@ -82,215 +115,184 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 /*checks the surrounding nodes*/
 void AStar::checkNodes(int parentX, int parentY)
 {
+	/*an integer to help erase the initial node at the end*/
+	int initalNode = 0;
+	if (openList.size() != 0)
+	{
+		/*if not the first run through set to current index position*/
+		initalNode = openList.size() - 1;
+	}
+	else
+	{
+		/*if first run through push back the initial node*/
+		//openList.push_back(*nodes[parentX][parentY]);
+		/*set the node to be listed*/
+		nodes[parentX][parentY]->setListed(true);
+	}
 
-/*creates a rectangle*/
-SDL_Rect box;
+	/*top left test*/
+	nodeTest(parentX, parentY, parentX - 1, parentY - 1, 14);
 
-/*top left*/
-if (nodes[parentX - 1][parentY - 1]->getSafeNode() && parentX != 0 && parentY !=0)
+	/*top middle test*/
+	nodeTest(parentX, parentY, parentX, parentY - 1, 10);
+
+	/*top right test*/
+	nodeTest(parentX, parentY, parentX + 1, parentY - 1, 14);
+
+	/*middle left test*/
+	nodeTest(parentX, parentY, parentX - 1, parentY, 10);
+
+	/*middle right test*/
+	nodeTest(parentX, parentY, parentX + 1, parentY, 10);
+
+	/*bottom left test*/
+	nodeTest(parentX, parentY, parentX - 1, parentY + 1, 14);
+
+	/*bottom middle test*/
+	nodeTest(parentX, parentY, parentX, parentY + 1, 10);
+
+	/*bottom right test*/
+	nodeTest(parentX, parentY, parentX + 1, parentY + 1, 14);
+
+	/*move the initial node to the closed list*/
+	closedList.push_back(*nodes[parentX][parentY]);
+}
+
+/**************************************************************************************************************/
+
+/*test the node*/
+void AStar::nodeTest(int parentX, int parentY, int testX, int testY, int cost)
 {
-	openList.push_back(nodes[parentX - 1][parentY - 1]);
-	nodes[parentX - 1][parentY - 1]->setParentIndex(parentX, parentY);
-	/*set the cost to the cost of the parent node plus 14*/
-	nodes[parentX - 1][parentY - 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
-	
-	/*set the draw colour to white*/
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	/*set the parent node of the node*/
+	nodes[testX][testY]->setParentIndex(parentX, parentY);
 
-	/*update the box for the test area*/
-	box.x = (parentX - 1) * 32;
-	box.y = (parentY - 1) * 32;
-	box.w = box.h = 32;
+	/*the node being tested*/
+	Node currentNode = *nodes[testX][testY];
 
-	/*draw the test area outline*/
-	SDL_RenderDrawRect(renderer, &box);
+	/*test if the test node is on the screen*/
+	if (testX < nodes.size() && testX >= 0 && testY < nodes[0].size() && testY >= 0)
+	{
+		/*test if the node is safe to move on and is not listed*/
+		if (currentNode.getSafeNode() && !currentNode.getListed())
+		{			
+			/*set the node to be listed*/
+			nodes[testX][testY]->setListed(true);
+
+			/*set the cost to the cost of the parent node plus the newly added cost*/
+			currentNode.setCostNode(nodes[parentX][parentY]->getCostNode() + cost);
+
+			/*work out the heuristic using the Manhattan method
+			(total number of squares moved horizontally and vertically to end)*/
+			int h = (abs(testX - endX) + abs(testY - endY)) * cost;
+
+			/*set the fScore of the node*/
+			currentNode.setFScoreNode(h + currentNode.getCostNode());
+
+			/*push the node*/
+			openList.push_back(currentNode);
+		}
+	}
 }
-
-/*top middle*/
-if (nodes[parentX][parentY - 1]->getSafeNode() && parentX != 0 && parentY != 0)
-{
-	openList.push_back(nodes[parentX][parentY - 1]);
-	nodes[parentX][parentY - 1]->setParentIndex(parentX, parentY);
-	/*set the cost to the cost of the parent node plus 10*/
-	nodes[parentX][parentY - 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
-
-	/*set the draw colour to white*/
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-	/*update the box for the test area*/
-	box.x = (parentX) * 32;
-	box.y = (parentY - 1) * 32;
-	box.w = box.h = 32;
-
-	/*draw the test area outline*/
-	SDL_RenderDrawRect(renderer, &box);
-}
-
-/*top right*/
-if (nodes[parentX + 1][parentY - 1]->getSafeNode() && parentX != 0 && parentY != 0)
-{
-	openList.push_back(nodes[parentX + 1][parentY - 1]);
-	nodes[parentX + 1][parentY - 1]->setParentIndex(parentX, parentY);
-	/*set the cost to the cost of the parent node plus 14*/
-	nodes[parentX + 1][parentY - 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
-
-	/*set the draw colour to white*/
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-	/*update the box for the test area*/
-	box.x = (parentX + 1) * 32;
-	box.y = (parentY - 1) * 32;
-	box.w = box.h = 32;
-
-	/*draw the test area outline*/
-	SDL_RenderDrawRect(renderer, &box);
-}
-
-/*middle left*/
-if (nodes[parentX - 1][parentY]->getSafeNode() && parentX != 0 && parentY != 0)
-{
-	openList.push_back(nodes[parentX - 1][parentY]);
-	nodes[parentX - 1][parentY]->setParentIndex(parentX, parentY);
-	/*set the cost to the cost of the parent node plus 10*/
-	nodes[parentX - 1][parentY]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
-
-	/*set the draw colour to white*/
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-	/*update the box for the test area*/
-	box.x = (parentX - 1) * 32;
-	box.y = (parentY) * 32;
-	box.w = box.h = 32;
-
-	/*draw the test area outline*/
-	SDL_RenderDrawRect(renderer, &box);
-}
-
-/*middle right*/
-if (nodes[parentX + 1][parentY]->getSafeNode() && parentX != 0 && parentY != 0)
-{
-	openList.push_back(nodes[parentX + 1][parentY]);
-	nodes[parentX + 1][parentY]->setParentIndex(parentX, parentY);
-	/*set the cost to the cost of the parent node plus 10*/
-	nodes[parentX + 1][parentY]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
-
-	/*set the draw colour to white*/
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-	/*update the box for the test area*/
-	box.x = (parentX + 1) * 32;
-	box.y = (parentY) * 32;
-	box.w = box.h = 32;
-
-	/*draw the test area outline*/
-	SDL_RenderDrawRect(renderer, &box);
-}
-
-/*bottom left*/
-if (nodes[parentX - 1][parentY + 1]->getSafeNode() && parentX != 0 && parentY != 0)
-{
-	openList.push_back(nodes[parentX - 1][parentY + 1]);
-	nodes[parentX - 1][parentY + 1]->setParentIndex(parentX, parentY);
-	/*set the cost to the cost of the parent node plus 14*/
-	nodes[parentX - 1][parentY + 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
-
-	/*set the draw colour to white*/
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-	/*update the box for the test area*/
-	box.x = (parentX - 1) * 32;
-	box.y = (parentY + 1) * 32;
-	box.w = box.h = 32;
-
-	/*draw the test area outline*/
-	SDL_RenderDrawRect(renderer, &box);
-}
-
-/*bottom middle*/
-if (nodes[parentX][parentY + 1]->getSafeNode() && parentX != 0 && parentY != 0)
-{
-	openList.push_back(nodes[parentX][parentY + 1]);
-	nodes[parentX][parentY + 1]->setParentIndex(parentX, parentY);
-	/*set the cost to the cost of the parent node plus 10*/
-	nodes[parentX][parentY + 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 10);
-
-	/*set the draw colour to white*/
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-	/*update the box for the test area*/
-	box.x = (parentX) * 32;
-	box.y = (parentY + 1) * 32;
-	box.w = box.h = 32;
-
-	/*draw the test area outline*/
-	SDL_RenderDrawRect(renderer, &box);
-}
-
-/*bottom right*/
-if (nodes[parentX + 1][parentY + 1]->getSafeNode() && parentX != 0 && parentY != 0)
-{
-	openList.push_back(nodes[parentX + 1][parentY + 1]);
-	nodes[parentX + 1][parentY + 1]->setParentIndex(parentX, parentY);
-	/*set the cost to the cost of the parent node plus 14*/
-	nodes[parentX + 1][parentY + 1]->setCostNode(nodes[parentX][parentY]->getCostNode() + 14);
-
-	/*set the draw colour to white*/
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-	/*update the box for the test area*/
-	box.x = (parentX + 1) * 32;
-	box.y = (parentY + 1) * 32;
-	box.w = box.h = 32;
-
-	/*draw the test area outline*/
-	SDL_RenderDrawRect(renderer, &box);
-}
-
-/*move the initial node to the closed list*/
-closedList.push_back(nodes[parentX][parentY]);
-
-/*set the draw colour to red*/
-SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
-
-/*update the box for the test area*/
-box.x = (parentX) * 32;
-box.y = (parentY) * 32;
-box.w = box.h = 32;
-
-/*draw the test area outline*/
-SDL_RenderFillRect(renderer, &box);
-}
-
 
 /**************************************************************************************************************/
 
 /*finds the next node*/
-void AStar::findNextNode(int h)
+void AStar::findNextNode()
 {
-	/*loop through the open list of nodes*/
-	for (unsigned int i = 0; i < openList.size(); i++)
-	{
-		/*set the fScore of the node*/
-		openList[i]->setFScoreNode(h + openList[i]->getCostNode());
-	}
-
 	/*the current closest node index*/
-	int current = 0;
+	unsigned int closestIndex = 0;
 
 	/*loop through the open list of nodes*/
 	for (unsigned int i = 1; i < openList.size(); i++)
 	{
 		/*if the current fScore is lower set the current to the current index*/
-		if (openList[current]->getFScoreNode() > openList[i]->getFScoreNode())
+		if (openList[closestIndex].getFScoreNode() >= openList[i].getFScoreNode())
 		{
-			current = i;
+			closestIndex = i;
 		}
 	}
 
 	/*set the current x and y*/
-	currentX = openList[current]->getXIndex();
-	currentY = openList[current]->getYIndex();
+	currentX = openList[closestIndex].getXIndex();
+	currentY = openList[closestIndex].getYIndex();
 
 	/*remove the node from the open list*/
-	openList.erase(openList.begin() + current);
+	openList.erase(openList.begin() + closestIndex);
+}
+
+/**************************************************************************************************************/
+
+/*displays the path*/
+void AStar::drawLists(SDL_Renderer* renderer)
+{
+	/*set draw colour to white*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+	/*creates a rectangle*/
+	SDL_Rect box;
+
+	for (auto node : openList)
+	{
+		/*update the box for the tile*/
+		box.x = node.getXIndex() * 32;
+		box.y = node.getYIndex() * 32;
+		box.w = box.h = 32;
+
+		/*draw the tiles outline*/
+		SDL_RenderDrawRect(renderer, &box);
+	}
+
+	/*set draw colour to black*/
+	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+
+	for (auto node : closedList)
+	{
+		/*update the box for the tile*/
+		box.x = node.getXIndex() * 32;
+		box.y = node.getYIndex() * 32;
+		box.w = box.h = 32;
+
+		/*draw the tiles outline*/
+		SDL_RenderDrawRect(renderer, &box);
+	}
+
+	/*set draw colour to cyan*/
+	SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0xFF, 0x00);
+
+	std::vector<Node> egg;
+	std::vector<Node> egg2 = closedList;
+	int parentX = egg2.back().getXIndex();
+	int parentY = egg2.back().getYIndex();
+	bool home = false;
+	while (!home)
+	{
+		Node blarg = egg2.back();
+		egg2.pop_back();
+		if (parentX == blarg.getXIndex() && parentY == blarg.getYIndex())
+		{
+			egg.push_back(blarg);
+			if (blarg.getStartNode())
+			{
+				home = true;
+			}
+			else
+			{
+				parentX = blarg.getParentXIndex();
+				parentY = blarg.getParentYIndex();
+			}
+		}
+	}
+
+	for (auto node : egg)
+	{
+		//std::cout << node.getXIndex() << "," << node.getYIndex() << std::endl;
+
+		/*update the box for the tile*/
+		box.x = node.getXIndex() * 32;
+		box.y = node.getYIndex() * 32;
+		box.w = box.h = 32;
+
+		/*draw the tiles outline*/
+		SDL_RenderDrawRect(renderer, &box);
+	}
 }

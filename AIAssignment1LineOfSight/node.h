@@ -22,6 +22,8 @@ private:
 	int cost;
 	/*the f score of the node*/
 	int fScore;
+	/*boolean values for if the node is on a list*/
+	bool listed;
 public:
 	/**
 	Constructs a Node object
@@ -92,7 +94,7 @@ public:
 
 	/**
 	Setter # Set the cost
-	@param bool The cost to move to the node
+	@param int The cost to move to the node
 	*/
 	void setCostNode(int cost);
 
@@ -125,4 +127,16 @@ public:
 	@return int The y index of the node
 	*/
 	int getYIndex();
+
+	/**
+	Setter # Set the value of listed
+	@param bool If the node is listed
+	*/
+	void setListed(bool listed);
+
+	/**
+	Getter # Get the value of listed
+	@return bool If the node is listed
+	*/
+	bool getListed();
 };

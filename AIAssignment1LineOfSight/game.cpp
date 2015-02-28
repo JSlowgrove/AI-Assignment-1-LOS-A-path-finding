@@ -15,10 +15,30 @@ Game::Game(StateManager* inStateManager, SDL_Renderer* inRenderer, int inWidth, 
 	player = new Player(spritesheet, map->getInitialPlayer(), 30, 30);
 	botA = new BotA(spritesheet, map->getInitialBotA(), 30, 30);
 	botB = new BotB(spritesheet, map->getInitialBotB(), 30, 30);
-	aStar = new AStar(map->getNumberOfXObjects(), map->getNumberOfYObjects(), renderer);
+	aStar = new AStar(map->getNumberOfXObjects(), map->getNumberOfYObjects());
 
 	/*initialise developer mode to off*/
 	developer = false;
+
+	/*initialise the a* nodes*/
+	for (int y = 0; y < map->getNumberOfYObjects(); y++)
+	{
+		for (int x = 0; x < map->getNumberOfXObjects(); x++)
+		{
+			/*check if the position is a wall*/
+			if (map->getMapPositionType(x, y) == 'w')
+			{
+				/*set the node to not be safe*/
+				aStar->setDangerNode(x, y);
+			}
+		}
+	}
+
+
+	moveTarget = LOS::getNewTarget(player->getPosition(), map);
+
+	//DEBUG CODE
+	moveTarget = { 448.0f, 384.0f };
 }
 
 /**************************************************************************************************************/
@@ -129,6 +149,13 @@ void Game::update(float dt)
 	/ *test the botB line of sight* /
 	botB->botALineOfSight(player, botA, map);*/
 
+	if (!testThing)
+	{
+		aStar->findNewPath((int)(botA->getPosition().x / 32), (int)(botA->getPosition().y / 32),
+			(int)(moveTarget.x / 32), (int)(moveTarget.y / 32));
+		testThing = true;
+	}
+
 	/*update the bot collisions*/
 	botA->collisionUpdate(map, dt);
 	botB->collisionUpdate(map, dt);
@@ -215,10 +242,16 @@ void Game::draw()
 	botA->display(renderer);
 	botB->display(renderer);
 
+	/*draw the path*/
+	aStar->drawLists(renderer);
 
-	Vec2 moveTarget = LOS::getNewTarget(player->getPosition(), map);
-	/*aStar->findNewPath((int)(botA->getPosition().x / 32), (int)(botA->getPosition().y / 32),
-	(int)(moveTarget.x), (int)(moveTarget.y));*/
+	/*draw the target*/
+	SDL_Rect box;
+	SDL_SetRenderDrawColor(renderer, 0xff, 0xff, 0x00, 0x00);
+	box.x = moveTarget.x;
+	box.y = moveTarget.y;
+	box.w = box.h = 32;
+	SDL_RenderDrawRect(renderer, &box);
 
 	/*display renderer*/
 	SDL_RenderPresent(renderer);

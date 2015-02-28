@@ -31,6 +31,8 @@ private:
 	AStar* aStar;
 	/*developer mode*/
 	bool developer;
+	Vec2 moveTarget;
+	bool testThing = false;
 public:
 	/**
 	Constructs a Game object

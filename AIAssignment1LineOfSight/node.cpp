@@ -8,6 +8,7 @@ Node::Node(int nodeXIndex, int nodeYIndex)
 	/*initialise the booleans*/
 	startNode = false;
 	endNode = false;
+	listed = false;
 	safe = true;
 
 	/*initialise the variables*/
@@ -105,7 +106,7 @@ void Node::setSafeNode(bool safe)
 /*get if the node is an safe*/
 bool Node::getSafeNode()
 {
-	/*return endNode*/
+	/*return safeNode*/
 	return safe;
 }
 
@@ -161,4 +162,22 @@ int Node::getYIndex()
 {
 	/*return the node y index*/
 	return nodeYIndex;
+}
+
+/**************************************************************************************************************/
+
+/*set the listed*/
+void Node::setListed(bool listed)
+{
+	/*set the node*/
+	this->listed = listed;
+}
+
+/**************************************************************************************************************/
+
+/*get if the node is listed*/
+bool Node::getListed()
+{
+	/*return listed*/
+	return listed;
 }
