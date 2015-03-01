@@ -38,7 +38,7 @@ Game::Game(StateManager* inStateManager, SDL_Renderer* inRenderer, int inWidth, 
 	moveTarget = LOS::getNewTarget(player->getPosition(), map);
 
 	//DEBUG CODE
-	moveTarget = { 448.0f, 384.0f };
+	//moveTarget = { 448.0f, 384.0f };
 }
 
 /**************************************************************************************************************/
@@ -99,6 +99,11 @@ bool Game::input()
 					developer = true;
 				}
 				break;
+
+				/*DEBUG CODE*/
+			case SDLK_p:
+				testThing = false;
+				break;
 			}
 			break;
 
@@ -149,8 +154,10 @@ void Game::update(float dt)
 	/ *test the botB line of sight* /
 	botB->botALineOfSight(player, botA, map);*/
 
+	/*DEBUG CODE*/
 	if (!testThing)
 	{
+		moveTarget = LOS::getNewTarget(player->getPosition(), map);
 		aStar->findNewPath((int)(botA->getPosition().x / 32), (int)(botA->getPosition().y / 32),
 			(int)(moveTarget.x / 32), (int)(moveTarget.y / 32));
 		testThing = true;
@@ -244,14 +251,6 @@ void Game::draw()
 
 	/*draw the path*/
 	aStar->drawLists(renderer);
-
-	/*draw the target*/
-	SDL_Rect box;
-	SDL_SetRenderDrawColor(renderer, 0xff, 0xff, 0x00, 0x00);
-	box.x = moveTarget.x;
-	box.y = moveTarget.y;
-	box.w = box.h = 32;
-	SDL_RenderDrawRect(renderer, &box);
 
 	/*display renderer*/
 	SDL_RenderPresent(renderer);

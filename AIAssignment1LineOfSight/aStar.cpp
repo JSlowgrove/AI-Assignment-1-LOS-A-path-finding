@@ -51,25 +51,32 @@ void AStar::setDangerNode(int nodeXIndex, int nodeYIndex)
 /*finds a new path to follow*/
 void AStar::findNewPath(int startX, int startY, int endX, int endY)
 {
-	/*reset listed information*/
+	/*reset listed information and start and stop nodes*/
 	for (int x = 0; x < xNodes; x++)
 	{
 		for (int y = 0; y < yNodes; y++)
 		{
 			nodes[x][y]->setListed(false);
+			nodes[x][y]->setStartNode(false);
+			nodes[x][y]->setEndNode(false);
 		}
 	}
+
+	/*reset open and closed list*/
+	openList.clear();
+	closedList.clear();
 
 	/*initialise start and end nodes*/
 	nodes[startX][startY]->setStartNode(true);
 	nodes[endX][endY]->setEndNode(true);
 
-	/*push back the start node to the closed list*/
-	//closedList.push_back(*nodes[startX][startY]);
+	/*push back the start node to the open list and set it as listed*/
+	openList.push_back(*nodes[startX][startY]);
+	nodes[startX][startY]->setListed(true);
 
-	/*initialise the current and end node index*/
-	currentX = startX;
-	currentY = startY;
+	/*initialise the start, current and end node index*/
+	this->startX = currentX = startX;
+	this->startY = currentY = startY;
 	this->endX = endX;
 	this->endY = endY;
 
@@ -86,16 +93,16 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 		and set there parent node and cost*/
 		checkNodes(currentX, currentY);
 
+		/*find the next node*/
+		findNextNode();
+
 		/*check if the end has been reached*/
-		if (nodes[currentX][currentY]->getEndNode())
+		if (closedList.back().getEndNode())
 		{
 			/*leave the loop*/
 			reachedEnd = true;
 			std::cout << "path found" << std::endl;
 		}
-
-		/*find the next node*/
-		findNextNode();
 
 		/*if too many loops give up looking for a path*/
 		if (loopIndex > 1300)
@@ -116,19 +123,19 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 void AStar::checkNodes(int parentX, int parentY)
 {
 	/*an integer to help erase the initial node at the end*/
-	int initalNode = 0;
+	/*int initalNode = 0;
 	if (openList.size() != 0)
 	{
-		/*if not the first run through set to current index position*/
+		/ *if not the first run through set to current index position* /
 		initalNode = openList.size() - 1;
 	}
 	else
 	{
-		/*if first run through push back the initial node*/
+		/ *if first run through push back the initial node* /
 		//openList.push_back(*nodes[parentX][parentY]);
-		/*set the node to be listed*/
+		/ *set the node to be listed* /
 		nodes[parentX][parentY]->setListed(true);
-	}
+	}*/
 
 	/*top left test*/
 	nodeTest(parentX, parentY, parentX - 1, parentY - 1, 14);
@@ -155,7 +162,7 @@ void AStar::checkNodes(int parentX, int parentY)
 	nodeTest(parentX, parentY, parentX + 1, parentY + 1, 14);
 
 	/*move the initial node to the closed list*/
-	closedList.push_back(*nodes[parentX][parentY]);
+	//closedList.push_back(*nodes[parentX][parentY]);
 }
 
 /**************************************************************************************************************/
@@ -164,7 +171,7 @@ void AStar::checkNodes(int parentX, int parentY)
 void AStar::nodeTest(int parentX, int parentY, int testX, int testY, int cost)
 {
 	/*set the parent node of the node*/
-	nodes[testX][testY]->setParentIndex(parentX, parentY);
+	//nodes[testX][testY]->setParentIndex(parentX, parentY);
 
 	/*the node being tested*/
 	Node currentNode = *nodes[testX][testY];
@@ -177,6 +184,9 @@ void AStar::nodeTest(int parentX, int parentY, int testX, int testY, int cost)
 		{			
 			/*set the node to be listed*/
 			nodes[testX][testY]->setListed(true);
+
+			/*set the parent node of the node*/
+			currentNode.setParentIndex(parentX, parentY);
 
 			/*set the cost to the cost of the parent node plus the newly added cost*/
 			currentNode.setCostNode(nodes[parentX][parentY]->getCostNode() + cost);
@@ -216,6 +226,9 @@ void AStar::findNextNode()
 	currentX = openList[closestIndex].getXIndex();
 	currentY = openList[closestIndex].getYIndex();
 
+	/*move the initial node to the closed list*/
+	closedList.push_back(openList[closestIndex]);
+	
 	/*remove the node from the open list*/
 	openList.erase(openList.begin() + closestIndex);
 }
@@ -261,6 +274,12 @@ void AStar::drawLists(SDL_Renderer* renderer)
 
 	std::vector<Node> egg;
 	std::vector<Node> egg2 = closedList;
+
+	/*for (auto node : closedList)
+	{
+		egg2.push_back(node);
+	}*/
+
 	int parentX = egg2.back().getXIndex();
 	int parentY = egg2.back().getYIndex();
 	bool home = false;
@@ -293,6 +312,20 @@ void AStar::drawLists(SDL_Renderer* renderer)
 		box.w = box.h = 32;
 
 		/*draw the tiles outline*/
-		SDL_RenderDrawRect(renderer, &box);
+		SDL_RenderFillRect(renderer, &box);
 	}
+
+	/*draw the target*/
+	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0x00);
+	box.x = endX * 32;
+	box.y = endY * 32;
+	box.w = box.h = 32;
+	SDL_RenderDrawRect(renderer, &box);
+
+	/*draw the start*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0x00);
+	box.x = startX * 32;
+	box.y = startY * 32;
+	box.w = box.h = 32;
+	SDL_RenderDrawRect(renderer, &box);
 }

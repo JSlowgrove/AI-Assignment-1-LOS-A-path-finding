@@ -32,6 +32,8 @@ private:
 	/*developer mode*/
 	bool developer;
 	Vec2 moveTarget;
+
+	/*DEBUG CODE*/
 	bool testThing = false;
 public:
 	/**

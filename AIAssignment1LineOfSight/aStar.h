@@ -25,6 +25,9 @@ private:
 	/**The end node index*/
 	int endX;
 	int endY;
+	/**The start node index*/
+	int startX;
+	int startY;
 
 	/**
 	Check the surrounding nodes
