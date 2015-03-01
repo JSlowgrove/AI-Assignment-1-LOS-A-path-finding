@@ -13,32 +13,11 @@ Game::Game(StateManager* inStateManager, SDL_Renderer* inRenderer, int inWidth, 
 	/*initialise the entities*/
 	map = new Map(spritesheet, "txt/map.txt");
 	player = new Player(spritesheet, map->getInitialPlayer(), 30, 30);
-	botA = new BotA(spritesheet, map->getInitialBotA(), 30, 30);
-	botB = new BotB(spritesheet, map->getInitialBotB(), 30, 30);
-	aStar = new AStar(map->getNumberOfXObjects(), map->getNumberOfYObjects());
+	botA = new BotA(spritesheet, map->getInitialBotA(), 30, 30, map);
+	botB = new BotB(spritesheet, map->getInitialBotB(), 30, 30, map);
 
 	/*initialise developer mode to off*/
 	developer = false;
-
-	/*initialise the a* nodes*/
-	for (int y = 0; y < map->getNumberOfYObjects(); y++)
-	{
-		for (int x = 0; x < map->getNumberOfXObjects(); x++)
-		{
-			/*check if the position is a wall*/
-			if (map->getMapPositionType(x, y) == 'w')
-			{
-				/*set the node to not be safe*/
-				aStar->setDangerNode(x, y);
-			}
-		}
-	}
-
-
-	moveTarget = LOS::getNewTarget(player->getPosition(), map);
-
-	//DEBUG CODE
-	//moveTarget = { 448.0f, 384.0f };
 }
 
 /**************************************************************************************************************/
@@ -99,11 +78,6 @@ bool Game::input()
 					developer = true;
 				}
 				break;
-
-				/*DEBUG CODE*/
-			case SDLK_p:
-				testThing = false;
-				break;
 			}
 			break;
 
@@ -148,20 +122,14 @@ void Game::update(float dt)
 	player->collisionUpdate(map, dt);
 
 	/*test the bots for player line of sight*/
-	/*botA->playerLineOfSight(player, map);
+	botA->playerLineOfSight(player, map);
 	botB->playerLineOfSight(player, map);
 
-	/ *test the botB line of sight* /
-	botB->botALineOfSight(player, botA, map);*/
+	/*test the botB line of sight*/
+	/*botB->botALineOfSight(player, botA, map);*/
 
-	/*DEBUG CODE*/
-	if (!testThing)
-	{
-		moveTarget = LOS::getNewTarget(player->getPosition(), map);
-		aStar->findNewPath((int)(botA->getPosition().x / 32), (int)(botA->getPosition().y / 32),
-			(int)(moveTarget.x / 32), (int)(moveTarget.y / 32));
-		testThing = true;
-	}
+	/*update the bot movements*/
+	botA->updateMovement(player, map, dt);
 
 	/*update the bot collisions*/
 	botA->collisionUpdate(map, dt);
@@ -244,13 +212,13 @@ void Game::draw()
 		botB->displayTiles(renderer, map);
 	}
 
+	/*draw the a* paths*/
+	botA->drawPath(renderer);
+
 	/*display other entities*/
 	player->display(renderer);
 	botA->display(renderer);
 	botB->display(renderer);
-
-	/*draw the path*/
-	aStar->drawLists(renderer);
 
 	/*display renderer*/
 	SDL_RenderPresent(renderer);

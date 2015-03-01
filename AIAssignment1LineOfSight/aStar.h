@@ -4,6 +4,7 @@
 #include <vector>
 #include "node.h"
 #include "SDL.h"
+#include "vec2.h"
 
 /**
 @brief Creates an object for A* path finding
@@ -16,6 +17,7 @@ private:
 	std::vector<std::vector<Node*>> nodes;
 	std::vector<Node> openList;
 	std::vector<Node> closedList;
+	std::vector<Node> bestPath;
 	/**The number of nodes*/
 	int xNodes;
 	int yNodes;
@@ -51,6 +53,11 @@ private:
 	*/
 	void findNextNode();
 
+	/**
+	Find the best path
+	*/
+	void findBestPath();
+
 public:
 	/**
 	Constructs an AStar object
@@ -74,6 +81,12 @@ public:
 	@param int The end y index value
 	*/
 	void findNewPath(int startX, int startY, int endX, int endY);
+
+	/**
+	Returns the position of the next node in the path
+	@returns Vec2 Node position
+	*/
+	Vec2 getNextPathNode();
 
 	/**
 	Displays the open and closed lists

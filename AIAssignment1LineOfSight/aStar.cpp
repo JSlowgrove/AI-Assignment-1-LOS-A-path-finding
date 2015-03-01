@@ -16,7 +16,7 @@ AStar::AStar(int xNodes, int yNodes)
 		for (int y = 0; y < yNodes; y++)
 		{
 			/*add a new node [x][y]*/
-			nodes[x].push_back(new Node(x,y));
+			nodes[x].push_back(new Node(x, y));
 		}
 	}
 }
@@ -62,9 +62,10 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 		}
 	}
 
-	/*reset open and closed list*/
+	/*reset open closed list and the best path*/
 	openList.clear();
 	closedList.clear();
+	bestPath.clear();
 
 	/*initialise start and end nodes*/
 	nodes[startX][startY]->setStartNode(true);
@@ -82,7 +83,7 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 
 	/*initialise the check*/
 	bool reachedEnd = false;
-	
+
 	/*the number of loops*/
 	int loopIndex = 0;
 
@@ -115,6 +116,9 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 		/*increase loop index*/
 		loopIndex++;
 	}
+
+	/*find the best path*/
+	findBestPath();
 }
 
 /**************************************************************************************************************/
@@ -122,29 +126,14 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 /*checks the surrounding nodes*/
 void AStar::checkNodes(int parentX, int parentY)
 {
-	/*an integer to help erase the initial node at the end*/
-	/*int initalNode = 0;
-	if (openList.size() != 0)
-	{
-		/ *if not the first run through set to current index position* /
-		initalNode = openList.size() - 1;
-	}
-	else
-	{
-		/ *if first run through push back the initial node* /
-		//openList.push_back(*nodes[parentX][parentY]);
-		/ *set the node to be listed* /
-		nodes[parentX][parentY]->setListed(true);
-	}*/
-
 	/*top left test*/
-	nodeTest(parentX, parentY, parentX - 1, parentY - 1, 14);
+	//nodeTest(parentX, parentY, parentX - 1, parentY - 1, 14);
 
 	/*top middle test*/
 	nodeTest(parentX, parentY, parentX, parentY - 1, 10);
 
 	/*top right test*/
-	nodeTest(parentX, parentY, parentX + 1, parentY - 1, 14);
+	//nodeTest(parentX, parentY, parentX + 1, parentY - 1, 14);
 
 	/*middle left test*/
 	nodeTest(parentX, parentY, parentX - 1, parentY, 10);
@@ -153,16 +142,13 @@ void AStar::checkNodes(int parentX, int parentY)
 	nodeTest(parentX, parentY, parentX + 1, parentY, 10);
 
 	/*bottom left test*/
-	nodeTest(parentX, parentY, parentX - 1, parentY + 1, 14);
+	//nodeTest(parentX, parentY, parentX - 1, parentY + 1, 14);
 
 	/*bottom middle test*/
 	nodeTest(parentX, parentY, parentX, parentY + 1, 10);
 
 	/*bottom right test*/
-	nodeTest(parentX, parentY, parentX + 1, parentY + 1, 14);
-
-	/*move the initial node to the closed list*/
-	//closedList.push_back(*nodes[parentX][parentY]);
+	//nodeTest(parentX, parentY, parentX + 1, parentY + 1, 14);
 }
 
 /**************************************************************************************************************/
@@ -170,9 +156,6 @@ void AStar::checkNodes(int parentX, int parentY)
 /*test the node*/
 void AStar::nodeTest(int parentX, int parentY, int testX, int testY, int cost)
 {
-	/*set the parent node of the node*/
-	//nodes[testX][testY]->setParentIndex(parentX, parentY);
-
 	/*the node being tested*/
 	Node currentNode = *nodes[testX][testY];
 
@@ -181,7 +164,7 @@ void AStar::nodeTest(int parentX, int parentY, int testX, int testY, int cost)
 	{
 		/*test if the node is safe to move on and is not listed*/
 		if (currentNode.getSafeNode() && !currentNode.getListed())
-		{			
+		{
 			/*set the node to be listed*/
 			nodes[testX][testY]->setListed(true);
 
@@ -228,9 +211,55 @@ void AStar::findNextNode()
 
 	/*move the initial node to the closed list*/
 	closedList.push_back(openList[closestIndex]);
-	
+
 	/*remove the node from the open list*/
 	openList.erase(openList.begin() + closestIndex);
+}
+
+/**************************************************************************************************************/
+
+/*gets the next path node position*/
+Vec2 AStar::getNextPathNode()
+{
+	/*initialise and set the position of the next node to the index of the back of the closed list*/
+	Vec2 nextNodePosition = { (float)(bestPath.back().getXIndex() * 32), (float)(bestPath.back().getYIndex() * 32) };
+	
+	/*remove the node at the front of the list*/
+	bestPath.erase(bestPath.begin() + (bestPath.size() - 1));
+
+	/*return the next node position*/
+	return nextNodePosition;
+}
+
+/**************************************************************************************************************/
+
+/*gets the best path*/
+void AStar::findBestPath()
+{
+	std::vector<Node> fullPath = closedList;
+
+	int parentX = fullPath.back().getXIndex();
+	int parentY = fullPath.back().getYIndex();
+	
+	bool home = false;
+	while (!home)
+	{
+		Node currentNode = fullPath.back();
+		fullPath.pop_back();
+		if (parentX == currentNode.getXIndex() && parentY == currentNode.getYIndex())
+		{
+			bestPath.push_back(currentNode);
+			if (currentNode.getStartNode())
+			{
+				home = true;
+			}
+			else
+			{
+				parentX = currentNode.getParentXIndex();
+				parentY = currentNode.getParentYIndex();
+			}
+		}
+	}
 }
 
 /**************************************************************************************************************/
@@ -272,40 +301,9 @@ void AStar::drawLists(SDL_Renderer* renderer)
 	/*set draw colour to cyan*/
 	SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0xFF, 0x00);
 
-	std::vector<Node> egg;
-	std::vector<Node> egg2 = closedList;
-
-	/*for (auto node : closedList)
+	/*draw the best path*/
+	for (auto node : bestPath)
 	{
-		egg2.push_back(node);
-	}*/
-
-	int parentX = egg2.back().getXIndex();
-	int parentY = egg2.back().getYIndex();
-	bool home = false;
-	while (!home)
-	{
-		Node blarg = egg2.back();
-		egg2.pop_back();
-		if (parentX == blarg.getXIndex() && parentY == blarg.getYIndex())
-		{
-			egg.push_back(blarg);
-			if (blarg.getStartNode())
-			{
-				home = true;
-			}
-			else
-			{
-				parentX = blarg.getParentXIndex();
-				parentY = blarg.getParentYIndex();
-			}
-		}
-	}
-
-	for (auto node : egg)
-	{
-		//std::cout << node.getXIndex() << "," << node.getYIndex() << std::endl;
-
 		/*update the box for the tile*/
 		box.x = node.getXIndex() * 32;
 		box.y = node.getYIndex() * 32;
@@ -315,15 +313,19 @@ void AStar::drawLists(SDL_Renderer* renderer)
 		SDL_RenderFillRect(renderer, &box);
 	}
 
-	/*draw the target*/
+	/*set draw colour to blue*/
 	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0x00);
+
+	/*draw the target*/
 	box.x = endX * 32;
 	box.y = endY * 32;
 	box.w = box.h = 32;
 	SDL_RenderDrawRect(renderer, &box);
 
-	/*draw the start*/
+	/*set draw colour to red*/
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0x00);
+
+	/*draw the start*/
 	box.x = startX * 32;
 	box.y = startY * 32;
 	box.w = box.h = 32;

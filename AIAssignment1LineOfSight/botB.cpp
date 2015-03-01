@@ -3,7 +3,7 @@
 /**************************************************************************************************************/
 
 /*Constructs the BotB object*/
-BotB::BotB(Texture * inTexture, Vec2 inPos, int w, int h) : BotAI(inTexture, inPos, Vec2(70.0f, 0.0f), 70, 70, w, h)
+BotB::BotB(Texture * inTexture, Vec2 inPos, int w, int h, Map* map) : BotAI(inTexture, inPos, Vec2(70.0f, 0.0f), 70, 70, w, h, map)
 {
 }
 

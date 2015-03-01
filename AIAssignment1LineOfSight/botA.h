@@ -19,8 +19,9 @@ public:
 	@param Vec2 the position of the Player
 	@param int the width of the BotA
 	@param int the height of the BotA
+	@param Map * A pointer to the map
 	*/
-	BotA(Texture*, Vec2, int, int);
+	BotA(Texture*, Vec2, int, int, Map*);
 
 	/**
 	Destructs an BotA object
