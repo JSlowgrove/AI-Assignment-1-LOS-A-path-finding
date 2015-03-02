@@ -68,6 +68,7 @@ public:
 	/**
 	Draw the path of the BotAI if they are running from the player
 	@param SDL_Renderer * A pointer to the renderer
+	@param Vec2 The position of the player
 	*/
-	void drawPath(SDL_Renderer*);
+	void drawPath(SDL_Renderer*, Vec2 player, Map* map);
 };

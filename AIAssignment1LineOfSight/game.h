@@ -29,6 +29,12 @@ private:
 	BotB* botB;
 	/*developer mode*/
 	bool developer;
+	bool showCollisions;
+	bool showLOS;
+	bool showAStar;
+	/*bool to make the game not update on first loop (Fixes Bugs)*/
+	bool firstRun;
+	
 public:
 	/**
 	Constructs a Game object

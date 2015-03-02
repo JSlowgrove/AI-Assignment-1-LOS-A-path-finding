@@ -280,19 +280,16 @@ void LOS::drawLineOfSight(Vec2 a, Vec2 b, Map* map, SDL_Renderer* renderer)
 /*find a new target position to go to*/
 Vec2 LOS::getNewTarget(Vec2 a, Map* map)
 {
-	/*initialise random seed*/
-	srand((unsigned int)time(NULL));
-
 	/*initialise variables*/
 	Vec2 b = { 0.0f, 0.0f };
 	bool wall = false;
 	bool generated = false;
-
+	
 	/*loop until a new position has been generated that is out of sight of the player*/
 	while (!generated)
 	{
 		/*initialise the target vector with a random new position*/
-		b = { (float)(rand() % 20) * 32, (float)(rand() % 15) * 32 };
+		b = { (float)(rand() % map->getNumberOfXObjects()) * 32, (float)(rand() % map->getNumberOfYObjects()) * 32 };
 
 		/*wall check*/
 		wall = false;
@@ -305,7 +302,7 @@ Vec2 LOS::getNewTarget(Vec2 a, Map* map)
 		while (wall)
 		{
 			/*generate a random new position*/
-			b = { (float)(rand() % 20) * 32, (float)(rand() % 15) * 32 };
+			b = { (float)(rand() % map->getNumberOfXObjects()) * 32, (float)(rand() % map->getNumberOfYObjects()) * 32 };
 
 			/*wall check*/
 			wall = false;

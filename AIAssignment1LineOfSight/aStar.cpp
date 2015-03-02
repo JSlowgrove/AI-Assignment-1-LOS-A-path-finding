@@ -312,22 +312,4 @@ void AStar::drawLists(SDL_Renderer* renderer)
 		/*draw the tiles outline*/
 		SDL_RenderFillRect(renderer, &box);
 	}
-
-	/*set draw colour to blue*/
-	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0x00);
-
-	/*draw the target*/
-	box.x = endX * 32;
-	box.y = endY * 32;
-	box.w = box.h = 32;
-	SDL_RenderDrawRect(renderer, &box);
-
-	/*set draw colour to red*/
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0x00);
-
-	/*draw the start*/
-	box.x = startX * 32;
-	box.y = startY * 32;
-	box.w = box.h = 32;
-	SDL_RenderDrawRect(renderer, &box);
 }

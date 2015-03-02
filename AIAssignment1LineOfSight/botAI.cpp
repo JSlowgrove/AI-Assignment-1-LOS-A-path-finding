@@ -23,6 +23,9 @@ BotAI::BotAI(Texture * inTexture, Vec2 inPos, Vec2 inSource, int inSpriteW, int 
 		}
 	}
 
+	/*initialise the moveTarget*/
+	moveTarget = position;
+
 	/*initialise the booleans*/
 	isSeen = running = false;
 }
@@ -55,9 +58,6 @@ void BotAI::playerLineOfSight(Player* player, Map* map)
 			/*get a new target*/
 			moveTarget = LOS::getNewTarget(player->getPosition(), map);
 
-			//DEBUG CODE
-			//moveTarget = { 448.0f, 384.0f };
-
 			/*generate a new path*/
 			aStar->findNewPath((int)(position.x / 32), (int)(position.y / 32), (int)(moveTarget.x / 32), (int)(moveTarget.y / 32));
 		}
@@ -82,7 +82,7 @@ void BotAI::updateMovement(Player* player, Map* map, float dt)
 			&& position.y >= nextPosition.y && position.y <= nextPosition.y + 32)
 		{
 			/*check if the target is still hidden from the player*/
-			if (!LOS::lineOfSight(player->getPosition(), moveTarget, map))
+			if (!LOS::lineOfSight(player->getPosition() + Vec2(15,15), moveTarget + Vec2(16,16), map))
 			{
 				/*set the next node value*/
 				nextPosition = aStar->getNextPathNode();
@@ -205,16 +205,31 @@ void BotAI::updateMovementVelocities(float dt)
 /**************************************************************************************************************/
 
 /*Draw the path of the BotAI if they are running from the player*/
-void BotAI::drawPath(SDL_Renderer* renderer)
+void BotAI::drawPath(SDL_Renderer* renderer, Vec2 player, Map* map)
 {
 	/*draw the path*/
 	aStar->drawLists(renderer);
 
-	/*draw the target*/
+	/*creates a rectangle*/
 	SDL_Rect box;
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 0x00);
+
+	/*set draw colour to blue*/
+	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0x00);
+
+	/*draw the target*/
 	box.x = moveTarget.x;
 	box.y = moveTarget.y;
 	box.w = box.h = 32;
-	SDL_RenderDrawRect(renderer, &box);
+	SDL_RenderFillRect(renderer, &box);
+
+	/*set draw colour to red*/
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0x00);
+
+	/*draw a line between the player and target*/
+	SDL_RenderDrawLine(renderer, (int)moveTarget.x + 16, (int)moveTarget.y + 16, (int)player.x + 15, (int)player.y + 15);
+
+	/*draw the line of sight calculations*/
+	LOS::drawLineOfSight(player, moveTarget, map, renderer);
+
+
 }
