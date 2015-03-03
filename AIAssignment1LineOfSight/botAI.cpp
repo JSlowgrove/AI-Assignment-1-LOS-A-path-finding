@@ -23,11 +23,13 @@ BotAI::BotAI(Texture * inTexture, Vec2 inPos, Vec2 inSource, int inSpriteW, int 
 		}
 	}
 
-	/*initialise the moveTarget*/
+	/*initialise the Vec2s*/
 	moveTarget = position;
+	nextPosition = position;
+	lastNode = position;
 
-	/*initialise the booleans*/
-	isSeen = running = false;
+	/*initialise the bot to not running*/
+	running = false;
 }
 
 /**************************************************************************************************************/
@@ -46,9 +48,6 @@ void BotAI::playerLineOfSight(Player* player, Map* map)
 	if (LOS::lineOfSight(position + Vec2(width * 0.5f, height * 0.5f), 
 		player->getPosition() + Vec2(player->getWidth() * 0.5f, player->getHeight() * 0.5f), map))
 	{
-		/*set the bot to seen*/
-		isSeen = true;
-
 		/*if the bot is not running initialise the path finding*/
 		if (!running)
 		{
@@ -61,11 +60,6 @@ void BotAI::playerLineOfSight(Player* player, Map* map)
 			/*generate a new path*/
 			aStar->findNewPath((int)(position.x / 32), (int)(position.y / 32), (int)(moveTarget.x / 32), (int)(moveTarget.y / 32));
 		}
-	}
-	else 
-	{
-		/*set the bot to hidden*/
-		isSeen = false;
 	}
 }
 
@@ -82,8 +76,10 @@ void BotAI::updateMovement(Player* player, Map* map, float dt)
 			&& position.y >= nextPosition.y && position.y <= nextPosition.y + 32)
 		{
 			/*check if the target is still hidden from the player*/
-			if (!LOS::lineOfSight(player->getPosition() + Vec2(15,15), moveTarget + Vec2(16,16), map))
+			if (!LOS::lineOfSight(player->getPosition() + Vec2(15, 15), moveTarget + Vec2(16, 16), map))
 			{
+				/*set the last node value*/
+				lastNode = nextPosition;
 				/*set the next node value*/
 				nextPosition = aStar->getNextPathNode();
 			}
@@ -96,10 +92,10 @@ void BotAI::updateMovement(Player* player, Map* map, float dt)
 				/*generate a new path*/
 				aStar->findNewPath((int)(position.x / 32), (int)(position.y / 32), (int)(moveTarget.x / 32), (int)(moveTarget.y / 32));
 			}
-		/*set the bot to flee*/
-		running = true;
+			/*set the bot to flee*/
+			running = true;
 		}
-		
+
 	}
 	else
 	{
@@ -204,8 +200,8 @@ void BotAI::updateMovementVelocities(float dt)
 
 /**************************************************************************************************************/
 
-/*Draw the path of the BotAI if they are running from the player*/
-void BotAI::drawPath(SDL_Renderer* renderer, Vec2 player, Map* map)
+/*Draw the path of the BotAI from the target*/
+void BotAI::drawPath(SDL_Renderer* renderer, Vec2 target)
 {
 	/*draw the path*/
 	aStar->drawLists(renderer);
@@ -226,10 +222,14 @@ void BotAI::drawPath(SDL_Renderer* renderer, Vec2 player, Map* map)
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0x00);
 
 	/*draw a line between the player and target*/
-	SDL_RenderDrawLine(renderer, (int)moveTarget.x + 16, (int)moveTarget.y + 16, (int)player.x + 15, (int)player.y + 15);
+	SDL_RenderDrawLine(renderer, (int)moveTarget.x + 16, (int)moveTarget.y + 16, (int)target.x + 15, (int)target.y + 15);
+}
 
-	/*draw the line of sight calculations*/
-	LOS::drawLineOfSight(player, moveTarget, map, renderer);
+/**************************************************************************************************************/
 
-
+/*Returns the last node the bot was after*/
+Vec2 BotAI::getLastNodePosition()
+{
+	/*reuturn the last nodes postion*/
+	return lastNode;
 }

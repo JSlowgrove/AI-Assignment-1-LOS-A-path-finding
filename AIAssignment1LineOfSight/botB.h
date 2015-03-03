@@ -13,6 +13,19 @@ Creates a BotB object that inherits BotAI and contains the details for the BotA.
 class BotB : public BotAI
 {
 private:
+	/**If the bot is following*/
+	bool following;
+	/**A pointer to BotA*/
+	BotA* botA;
+
+	/**
+	The movements of the BotB when following
+	@param Creature * A pointer to the creature
+	@param Map * A pointer to the map
+	@param float The delta time
+	*/
+	void updateMoveFollow(Creature*, Map*, float);
+
 public:
 	/**
 	Constructs an BotB object
@@ -29,12 +42,20 @@ public:
 	*/
 	~BotB();
 
-	/*
-	Test if BotA is in sight
+	/**
+	Test if the Player is in sight and if BotA should be followed
 	@param Player * A pointer to the Player
-	@param BotA * A pointer to BotA
-	@param Map * A pointer to the Map
+	@param BotA * A pointer to the BotA
+	@param Map * A pointer to the map
 	*/
-	void botALineOfSight(Player*, BotA*, Map*);
+	void playerLineOfSight(Player*, BotA*, Map*);
 
+	/**
+	Update the next movement of the BotB when following
+	@param BotA * A pointer to the BotA
+	@param BotA * A pointer to the Player
+	@param Map * A pointer to the map
+	@param float The delta time
+	*/
+	void updateMovement(BotA*, Player* , Map*, float);
 };

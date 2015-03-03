@@ -140,14 +140,11 @@ void Game::update(float dt)
 
 		/*test the bots for player line of sight*/
 		botA->playerLineOfSight(player, map);
-		botB->playerLineOfSight(player, map);
-
-		/*test the botB line of sight*/
-		/*botB->botALineOfSight(player, botA, map);*/
+		botB->playerLineOfSight(player, botA, map);
 
 		/*update the bot movements*/
 		botA->updateMovement(player, map, dt);
-		botB->updateMovement(player, map, dt);
+		botB->updateMovement(botA, player, map, dt);
 
 		/*update the bot collisions*/
 		botA->collisionUpdate(map, dt);
@@ -244,8 +241,9 @@ void Game::draw()
 		if (showAStar)
 		{
 			/*draw the a* paths*/
-			botA->drawPath(renderer, player->getPosition(), map);
-			botB->drawPath(renderer, player->getPosition(), map);
+			botA->drawPath(renderer, player->getPosition());
+			botB->drawPath(renderer, player->getPosition());
+			botB->drawPath(renderer, botA->getPosition());
 		}
 	}
 

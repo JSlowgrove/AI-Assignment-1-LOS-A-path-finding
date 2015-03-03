@@ -20,8 +20,7 @@ protected:
 	AStar* aStar;
 	Vec2 moveTarget;
 	Vec2 nextPosition;
-	/**If the BotAI is seen by the player*/
-	bool isSeen;
+	Vec2 lastNode;
 	/**If the BotAI is currently running*/
 	bool running;
 
@@ -51,7 +50,7 @@ public:
 	~BotAI();
 
 	/**
-	Test if the player is in sight
+	Virtual # Test if the player is in sight
 	@param Player * A pointer to the player
 	@param Map * A pointer to the map
 	*/
@@ -59,16 +58,22 @@ public:
 
 	/**
 	Update the next movement of the BotAI
-	@param Player * A pointer to the player
+	@param Player * A pointer to the Player
 	@param Map * A pointer to the map
 	@param float The delta time
 	*/
 	void updateMovement(Player*, Map*, float);
 
 	/**
-	Draw the path of the BotAI if they are running from the player
+	Draw the path of the BotAI from the target
 	@param SDL_Renderer * A pointer to the renderer
-	@param Vec2 The position of the player
+	@param Vec2 The position of the target
 	*/
-	void drawPath(SDL_Renderer*, Vec2 player, Map* map);
+	void drawPath(SDL_Renderer*, Vec2 target);
+
+	/**
+	Getter # Get the last target node
+	@return Vec2 The last nodes position
+	*/
+	Vec2 getLastNodePosition();
 };

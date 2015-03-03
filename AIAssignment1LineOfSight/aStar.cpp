@@ -102,7 +102,7 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 		{
 			/*leave the loop*/
 			reachedEnd = true;
-			std::cout << "path found" << std::endl;
+			//std::cout << "path found" << std::endl;
 		}
 
 		/*if too many loops give up looking for a path*/
@@ -110,7 +110,7 @@ void AStar::findNewPath(int startX, int startY, int endX, int endY)
 		{
 			/*leave the loop*/
 			reachedEnd = true;
-			std::cout << "too many loops, give up on a* test" << std::endl;
+			//std::cout << "too many loops, give up on a* test" << std::endl;
 		}
 
 		/*increase loop index*/
