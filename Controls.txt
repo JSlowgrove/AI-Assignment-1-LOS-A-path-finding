@@ -1,11 +1,14 @@
 BotA = Blue Character
 BotB = Yellow Character
+Player = Pink Character
 
-Player Movement[Pink Character]:
-Up = W/Up
-Down = S/Down
-Left = A/Left
-Right = D/Right
+Quit = Escape / Close the Window
+
+Player Movement:
+Up = W / Up
+Down = S / Down
+Left = A / Left
+Right = D / Right
 
 Options:
 Toggle Developer mode On/Off = Tab
