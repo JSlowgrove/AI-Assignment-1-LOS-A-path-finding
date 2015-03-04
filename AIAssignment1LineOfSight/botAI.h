@@ -77,4 +77,10 @@ public:
 	@return Vec2 The last nodes position
 	*/
 	Vec2 getLastNodePosition();
+
+	/**
+	Getter # Get the value of running
+	@return bool The value of running
+	*/
+	bool getRunning();
 };

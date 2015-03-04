@@ -27,6 +27,19 @@ Game::Game(StateManager* inStateManager, SDL_Renderer* inRenderer, int inWidth, 
 
 	/*initialise random seed*/
 	srand((unsigned int)time(NULL));
+
+	/*initialise the text (font from http://www.dafont.com/code.font)*/
+	text.push_back(new Text("Developer Mode: ", "font/CODE_Bold.ttf", renderer, 255, 255, 0));
+	text.push_back(new Text("Show Collision Tests: ", "font/CODE_Bold.ttf", renderer, 255, 255, 0));
+	text.push_back(new Text("Show LOS Tests: ", "font/CODE_Bold.ttf", renderer, 255, 255, 0));
+	text.push_back(new Text("Show A Star Tests: ", "font/CODE_Bold.ttf", renderer, 255, 255, 0));
+	text.push_back(new Text("ON", "font/CODE_Bold.ttf", renderer, 0, 255, 0));
+	text.push_back(new Text("OFF", "font/CODE_Bold.ttf", renderer, 255, 0, 0));
+	text.push_back(new Text("Bot A Running: ", "font/CODE_Bold.ttf", renderer, 255, 255, 0));
+	text.push_back(new Text("Bot B Running: ", "font/CODE_Bold.ttf", renderer, 255, 255, 0));
+	text.push_back(new Text("Bot B Following: ", "font/CODE_Bold.ttf", renderer, 255, 255, 0));
+	text.push_back(new Text("TRUE", "font/CODE_Bold.ttf", renderer, 0, 255, 0));
+	text.push_back(new Text("FALSE", "font/CODE_Bold.ttf", renderer, 255, 0, 0));
 }
 
 /**************************************************************************************************************/
@@ -34,7 +47,17 @@ Game::Game(StateManager* inStateManager, SDL_Renderer* inRenderer, int inWidth, 
 /*Destructs the game object*/
 Game::~Game()
 {
-	
+	/*delete pointers*/
+	for (unsigned int i = 0; i < text.size(); i++)
+	{
+		delete text[i];
+	}
+	delete background;
+	delete spritesheet;
+	delete map;
+	delete player;
+	delete botA;
+	delete botB;
 }
 
 /**************************************************************************************************************/
@@ -191,12 +214,59 @@ void Game::draw()
 		map->getWall(i)->display(renderer);
 	}
 
+	/*display text*/
+	text[0]->pushToScreen(renderer, 10, 10, 100, 10);
+
 	/*developer display*/
 	if (developer)
 	{
+		/*display development text*/
+		text[1]->pushToScreen(renderer, 10, 20, 150, 10);/*show collisions*/
+		text[2]->pushToScreen(renderer, 10, 30, 100, 10);/*show LOS*/
+		text[3]->pushToScreen(renderer, 10, 40, 100, 10);/*show A Star*/
+		text[6]->pushToScreen(renderer, 10, 50, 100, 10);/*show Bot A Running*/
+		text[7]->pushToScreen(renderer, 10, 60, 100, 10);/*show Bot B Running*/
+		text[8]->pushToScreen(renderer, 10, 70, 100, 10);/*show Bot B Following*/
+
+		/*display Bot A running state*/
+		if (botA->getRunning())
+		{
+			text[9]->pushToScreen(renderer, 170, 50, 50, 10);
+		}
+		else
+		{
+			text[10]->pushToScreen(renderer, 170, 50, 50, 10);
+		}
+
+		/*display Bot B running state*/
+		if (botB->getRunning())
+		{
+			text[9]->pushToScreen(renderer, 170, 60, 50, 10);
+		}
+		else
+		{
+			text[10]->pushToScreen(renderer, 170, 60, 50, 10);
+		}
+
+		/*display Bot B following state*/
+		if (botB->getFollowing())
+		{
+			text[9]->pushToScreen(renderer, 170, 70, 50, 10);
+		}
+		else
+		{
+			text[10]->pushToScreen(renderer, 170, 70, 50, 10);
+		}
+
+		/*development mode on text*/
+		text[4]->pushToScreen(renderer, 170, 10, 30, 10);
+
 		/*if show LOS is toggled on*/
 		if (showLOS)
-		{
+		{	
+			/*show LOS on text*/
+			text[4]->pushToScreen(renderer, 170, 30, 30, 10);
+
 			/*set draw colour to yellow*/
 			SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 0xFF);
 
@@ -229,22 +299,50 @@ void Game::draw()
 			LOS::drawLineOfSight(botA->getPosition() + Vec2(botA->getWidth()*0.5f, botA->getHeight()*0.5f),
 				botB->getPosition() + Vec2(botB->getWidth()*0.5f, botB->getHeight()*0.5f), map, renderer);
 		}
+		else
+		{
+			/*show LOS off text*/
+			text[5]->pushToScreen(renderer, 170, 30, 30, 10);
+		}
+
 		/*if show collisions is toggled on*/
 		if (showCollisions)
 		{
+			/*show collisions on text*/
+			text[4]->pushToScreen(renderer, 170, 20, 30, 10);
+
 			/*draw the intersection tiles with the creatures*/
 			player->displayTiles(renderer, map);
 			botA->displayTiles(renderer, map);
 			botB->displayTiles(renderer, map);
 		}
+		else
+		{
+			/*show collisions off text*/
+			text[5]->pushToScreen(renderer, 170, 20, 30, 10);
+		}
+
 		/*if show aStar is toggled on*/
 		if (showAStar)
 		{
+			/*show aStar on text*/
+			text[4]->pushToScreen(renderer, 170, 40, 30, 10);
+
 			/*draw the a* paths*/
 			botA->drawPath(renderer, player->getPosition());
 			botB->drawPath(renderer, player->getPosition());
 			botB->drawPath(renderer, botA->getPosition());
 		}
+		else
+		{
+			/*show aStar off text*/
+			text[5]->pushToScreen(renderer, 170, 40, 30, 10);
+		}
+	}
+	else
+	{
+		/*development mode off text*/
+		text[5]->pushToScreen(renderer, 170, 10, 30, 10);
 	}
 
 	/*display other entities*/

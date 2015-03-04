@@ -57,4 +57,10 @@ public:
 	@param float The delta time
 	*/
 	void updateMovement(Player* , Map*, float);
+
+	/**
+	Getter # Get the value of following
+	@return bool The value of following
+	*/
+	bool getFollowing();
 };

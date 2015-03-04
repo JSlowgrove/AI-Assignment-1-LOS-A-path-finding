@@ -4,7 +4,7 @@
 #include "state.h"
 #include "stateManager.h"
 #include "texture.h"
-#include "audio.h"
+#include "text.h"
 #include "map.h"
 #include "wall.h"
 #include "player.h"
@@ -34,6 +34,8 @@ private:
 	bool showAStar;
 	/*bool to make the game not update on first loop (Fixes Bugs)*/
 	bool firstRun;
+	/*rendered text*/
+	std::vector<Text *> text;
 	
 public:
 	/**

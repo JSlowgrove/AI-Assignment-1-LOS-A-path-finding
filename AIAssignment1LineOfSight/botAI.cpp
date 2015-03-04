@@ -233,3 +233,12 @@ Vec2 BotAI::getLastNodePosition()
 	/*return the last nodes position*/
 	return lastNode;
 }
+
+/**************************************************************************************************************/
+
+/*Returns the value of running*/
+bool BotAI::getRunning()
+{
+	/*return the value of running*/
+	return running;
+}

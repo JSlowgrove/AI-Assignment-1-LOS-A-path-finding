@@ -47,6 +47,9 @@ void BotB::playerLineOfSight(Player* player, BotA* botA, Map* map)
 		if (LOS::lineOfSight(position + Vec2(width * 0.5f, height * 0.5f),
 			botA->getPosition() + Vec2(botA->getWidth() * 0.5f, botA->getHeight() * 0.5f), map))
 		{
+			/*Stop the bot from running*/
+			running = false;
+
 			/*if the bot is not following initialise the path finding*/
 			if (!following)
 			{
@@ -146,4 +149,13 @@ void BotB::updateMovement(Player* player, Map* map, float dt)
 		/*update velocities*/
 		updateMovementVelocities(dt, running);
 	}
+}
+
+/**************************************************************************************************************/
+
+/*Returns the value of following*/
+bool BotB::getFollowing()
+{
+	/*return the value of following*/
+	return following;
 }
