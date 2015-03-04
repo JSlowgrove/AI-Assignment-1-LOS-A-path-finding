@@ -1,3 +1,6 @@
+BotA = Blue Character
+BotB = Yellow Character
+
 Player Movement[Pink Character]:
 Up = W/Up
 Down = S/Down
