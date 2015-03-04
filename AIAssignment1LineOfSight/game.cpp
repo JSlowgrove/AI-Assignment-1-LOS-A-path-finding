@@ -144,7 +144,7 @@ void Game::update(float dt)
 
 		/*update the bot movements*/
 		botA->updateMovement(player, map, dt);
-		botB->updateMovement(botA, player, map, dt);
+		botB->updateMovement(player, map, dt);
 
 		/*update the bot collisions*/
 		botA->collisionUpdate(map, dt);

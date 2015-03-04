@@ -160,7 +160,7 @@ void AStar::nodeTest(int parentX, int parentY, int testX, int testY, int cost)
 	Node currentNode = *nodes[testX][testY];
 
 	/*test if the test node is on the screen*/
-	if (testX < nodes.size() && testX >= 0 && testY < nodes[0].size() && testY >= 0)
+	if (testX < (int)nodes.size() && testX >= 0 && testY < (int)nodes[0].size() && testY >= 0)
 	{
 		/*test if the node is safe to move on and is not listed*/
 		if (currentNode.getSafeNode() && !currentNode.getListed())
@@ -236,25 +236,37 @@ Vec2 AStar::getNextPathNode()
 /*gets the best path*/
 void AStar::findBestPath()
 {
+	/*Copy the closed list to the local vector full path*/
 	std::vector<Node> fullPath = closedList;
 
+	/*store the x and y index of the back of the full path as the initial parent*/
 	int parentX = fullPath.back().getXIndex();
 	int parentY = fullPath.back().getYIndex();
 	
+	/*set a boolean for escaping the loop when the path is complete*/
 	bool home = false;
+
+	/*loop until home*/
 	while (!home)
 	{
+		/*get the node at the back of the path*/
 		Node currentNode = fullPath.back();
+		/*remove the node at the back of the full path*/
 		fullPath.pop_back();
+		/*if the current node is the parent node*/
 		if (parentX == currentNode.getXIndex() && parentY == currentNode.getYIndex())
 		{
+			/*store the node to the best path*/
 			bestPath.push_back(currentNode);
+			/*check if the node is a start node*/
 			if (currentNode.getStartNode())
 			{
+				/*home has been reached*/
 				home = true;
 			}
 			else
 			{
+				/*set the parent node to the parent node of the current nodes parent index*/
 				parentX = currentNode.getParentXIndex();
 				parentY = currentNode.getParentYIndex();
 			}

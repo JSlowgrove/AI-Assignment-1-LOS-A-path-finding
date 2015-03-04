@@ -27,8 +27,9 @@ protected:
 	/**
 	Update the movement velocities of the BotAI
 	@param float The delta time
+	@param bool The test boolean
 	*/
-	void updateMovementVelocities(float);
+	void updateMovementVelocities(float, bool);
 
 public:
 	/**
@@ -57,12 +58,12 @@ public:
 	void playerLineOfSight(Player*, Map*);
 
 	/**
-	Update the next movement of the BotAI
+	Virtual # Update the next movement of the BotAI
 	@param Player * A pointer to the Player
 	@param Map * A pointer to the map
 	@param float The delta time
 	*/
-	void updateMovement(Player*, Map*, float);
+	virtual void updateMovement(Player*, Map*, float);
 
 	/**
 	Draw the path of the BotAI from the target

@@ -69,7 +69,7 @@ void BotB::playerLineOfSight(Player* player, BotA* botA, Map* map)
 /**************************************************************************************************************/
 
 /*Update the next movement of the BotB*/
-void BotB::updateMovement(BotA* bot, Player* player, Map* map, float dt)
+void BotB::updateMovement(Player* player, Map* map, float dt)
 {
 	/*is the bot following*/
 	if (following)
@@ -97,6 +97,8 @@ void BotB::updateMovement(BotA* bot, Player* player, Map* map, float dt)
 				following = false;
 			}
 		}
+		/*update velocities*/
+		updateMovementVelocities(dt, following);
 	}
 	else
 	{
@@ -118,6 +120,9 @@ void BotB::updateMovement(BotA* bot, Player* player, Map* map, float dt)
 				/*if not regenerate a path and target*/
 				else
 				{
+					/*set the bot to not follow*/
+					following = false;
+
 					/*get a new target*/
 					moveTarget = LOS::getNewTarget(player->getPosition(), map);
 
@@ -138,9 +143,7 @@ void BotB::updateMovement(BotA* bot, Player* player, Map* map, float dt)
 				running = false;
 			}
 		}
+		/*update velocities*/
+		updateMovementVelocities(dt, running);
 	}
-	/*update velocities*/
-	updateMovementVelocities(dt);
-	
-
 }

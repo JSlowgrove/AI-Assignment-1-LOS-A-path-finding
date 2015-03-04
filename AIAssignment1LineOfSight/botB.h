@@ -51,11 +51,10 @@ public:
 	void playerLineOfSight(Player*, BotA*, Map*);
 
 	/**
-	Update the next movement of the BotB when following
-	@param BotA * A pointer to the BotA
+	Update the next movement of the BotB
 	@param BotA * A pointer to the Player
 	@param Map * A pointer to the map
 	@param float The delta time
 	*/
-	void updateMovement(BotA*, Player* , Map*, float);
+	void updateMovement(Player* , Map*, float);
 };

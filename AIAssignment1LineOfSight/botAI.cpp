@@ -108,16 +108,16 @@ void BotAI::updateMovement(Player* player, Map* map, float dt)
 	}
 
 	/*update velocities*/
-	updateMovementVelocities(dt);
+	updateMovementVelocities(dt, running);
 }
 
 /**************************************************************************************************************/
 
 /*Update the movement velocities*/
-void BotAI::updateMovementVelocities(float dt)
+void BotAI::updateMovementVelocities(float dt, bool check)
 {
-	/*if the bot is running*/
-	if (running)
+	/*if the bot should move*/
+	if (check)
 	{
 		/*the position next frame*/
 		float testX = position.x + (velocities.x * dt);
@@ -213,8 +213,8 @@ void BotAI::drawPath(SDL_Renderer* renderer, Vec2 target)
 	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0x00);
 
 	/*draw the target*/
-	box.x = moveTarget.x;
-	box.y = moveTarget.y;
+	box.x = (int)moveTarget.x;
+	box.y = (int)moveTarget.y;
 	box.w = box.h = 32;
 	SDL_RenderFillRect(renderer, &box);
 
@@ -230,6 +230,6 @@ void BotAI::drawPath(SDL_Renderer* renderer, Vec2 target)
 /*Returns the last node the bot was after*/
 Vec2 BotAI::getLastNodePosition()
 {
-	/*reuturn the last nodes postion*/
+	/*return the last nodes position*/
 	return lastNode;
 }
