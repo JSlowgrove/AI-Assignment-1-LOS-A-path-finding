@@ -8,6 +8,7 @@
 /**
 @brief Creates a Texture for use with a renderer
 Creates a Texture from an image file, this can then be used with a renderer.
+DISCLAIMER - This code is from my PGG SDL Assignment.
 */
 class Texture
 {

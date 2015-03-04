@@ -7,7 +7,7 @@ Text::Text(std::string text, std::string fontName, SDL_Renderer* renderer, int r
 {
 	/*initialise font and font colour*/
 	font = TTF_OpenFont(fontName.c_str(), 10);
-	fontColour = { r, g, b };
+	fontColour = { (Uint8)r, (Uint8)g, (Uint8)b };
 
 	/*Declaring the surface*/
 	SDL_Surface *surface;

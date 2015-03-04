@@ -4,6 +4,7 @@
 #include "state.h"
 #include "stateManager.h"
 #include "texture.h"
+#include "audio.h"
 #include "text.h"
 #include "map.h"
 #include "wall.h"
@@ -36,6 +37,15 @@ private:
 	bool firstRun;
 	/*rendered text*/
 	std::vector<Text *> text;
+	/*background music*/
+	Audio * music;
+	/*if the music should play*/
+	bool playMusic;
+
+	/**
+	A function to draw the text
+	*/
+	void drawText();
 	
 public:
 	/**

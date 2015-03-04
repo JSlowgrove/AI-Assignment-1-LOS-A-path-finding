@@ -1,0 +1,14 @@
+Player Movement[Pink Character]:
+Up = W/Up
+Down = S/Down
+Left = A/Left
+Right = D/Right
+
+Options:
+Toggle Developer mode On/Off = Tab
+Toggle Music On/Off = M
+
+Developer mode Options:
+Toggle Displaying Collision Detection On/Off = 1
+Toggle Displaying LOS[Line of Sight] On/Off = 2
+Toggle Displaying A* Path-finding On/Off = 3
